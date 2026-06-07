@@ -4,86 +4,275 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BoostCore v2.0 — Ultimate FPS & Windows Optimization</title>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  
   :root {
-    --bg: #0a0a0f; --bg2: #0f0f18; --bg3: #13131e;
-    --border: rgba(255,255,255,0.06); --border2: rgba(255,255,255,0.12);
-    --accent: #5865F2; --accent2: #7289DA; --cyan: #00d4ff;
-    --text: #e8e8f0; --muted: #8888a0;
+    --bg: #050508;
+    --bg-card: #0c0d14;
+    --bg-card-hover: #121420;
+    --border: rgba(0, 212, 255, 0.1);
+    --border-hover: rgba(0, 212, 255, 0.3);
+    --accent: #5865F2;
+    --github: #24292e;
+    --cyan: #00d4ff;
+    --cyan-glow: rgba(0, 212, 255, 0.15);
+    --text: #f1f1f5;
+    --muted: #7e8299;
   }
-  .btn-github { display: inline-flex; align-items: center; gap: 10px; background: #24292e; color: #fff; font-weight: 600; font-size: 0.9rem; letter-spacing: 1px; padding: 14px 32px; border-radius: 6px; text-decoration: none; border: none; cursor: pointer; transition: all 0.2s; }
-  .btn-github:hover { background: #3a3f44; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
-  .btn-github svg { width: 20px; height: 20px; }
+
   html { scroll-behavior: smooth; }
-  body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.7; overflow-x: hidden; }
-  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 2.5rem; height: 60px; background: rgba(10,10,15,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
-  .nav-logo { font-family: 'Rajdhani', sans-serif; font-size: 1.4rem; font-weight: 700; letter-spacing: 2px; color: #fff; }
-  .nav-logo span { color: var(--cyan); }
-  .nav-links { display: flex; gap: 2rem; }
-  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; letter-spacing: 0.5px; transition: color 0.2s; }
-  .nav-links a:hover { color: var(--text); }
-  .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6rem 2rem 4rem; position: relative; overflow: hidden; }
-  .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(0,212,255,0.06) 0%, transparent 70%); pointer-events: none; }
-  .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.2); border-radius: 999px; padding: 6px 18px; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: var(--cyan); margin-bottom: 2rem; }
-  .hero-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); animation: pulse 2s infinite; }
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-  .logo-img { width: 120px; height: 120px; object-fit: contain; margin-bottom: 1.5rem; filter: drop-shadow(0 0 24px rgba(0,212,255,0.3)); }
-  h1 { font-family: 'Rajdhani', sans-serif; font-size: clamp(3rem, 8vw, 6rem); font-weight: 700; letter-spacing: 4px; line-height: 1; margin-bottom: 0.3rem; color: #fff; }
-  h1 span { color: var(--cyan); }
-  .hero-version { font-family: 'Rajdhani', sans-serif; font-size: 1rem; letter-spacing: 4px; color: var(--muted); margin-bottom: 1.5rem; }
-  .hero-sub { font-size: 1.1rem; color: var(--muted); max-width: 520px; margin: 0 auto 2.5rem; line-height: 1.8; }
-  .hero-buttons { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
-  .btn-download { display: inline-flex; align-items: center; gap: 10px; background: var(--cyan); color: #000; font-weight: 600; font-size: 0.9rem; letter-spacing: 1px; padding: 14px 32px; border-radius: 6px; text-decoration: none; border: none; cursor: pointer; transition: all 0.2s; }
-  .btn-download:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,212,255,0.25); }
-  .btn-download svg { width: 18px; height: 18px; }
-  .btn-discord { display: inline-flex; align-items: center; gap: 10px; background: #5865F2; color: #fff; font-weight: 600; font-size: 0.9rem; letter-spacing: 1px; padding: 14px 32px; border-radius: 6px; text-decoration: none; border: none; cursor: pointer; transition: all 0.2s; }
-  .btn-discord:hover { background: #4752c4; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(88,101,242,0.35); }
-  .btn-discord svg { width: 20px; height: 20px; }
-  .stats { display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; padding: 3rem 2rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-  .stat { text-align: center; }
-  .stat-num { font-family: 'Rajdhani', sans-serif; font-size: 2.2rem; font-weight: 700; color: var(--cyan); display: block; }
-  .stat-label { font-size: 0.8rem; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
-  section { padding: 5rem 2rem; max-width: 1100px; margin: 0 auto; }
-  .section-tag { font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; color: var(--cyan); margin-bottom: 0.8rem; }
-  h2 { font-family: 'Rajdhani', sans-serif; font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; letter-spacing: 2px; color: #fff; margin-bottom: 1rem; }
-  .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-top: 3rem; }
-  .info-card { background: var(--bg2); padding: 2rem; transition: background 0.2s; }
-  .info-card:hover { background: var(--bg3); }
-  .info-icon { font-size: 1.8rem; margin-bottom: 1rem; }
-  .info-card h3 { font-family: 'Rajdhani', sans-serif; font-size: 1.1rem; font-weight: 600; letter-spacing: 1px; color: #fff; margin-bottom: 0.6rem; }
-  .info-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
-  .steps { display: flex; flex-direction: column; gap: 1px; margin-top: 3rem; }
-  .step { display: flex; gap: 1.5rem; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 1.8rem 2rem; margin-bottom: 1px; align-items: flex-start; transition: border-color 0.2s; }
-  .step:hover { border-color: var(--border2); }
-  .step-num { font-family: 'Rajdhani', sans-serif; font-size: 2.5rem; font-weight: 700; color: rgba(0,212,255,0.2); line-height: 1; min-width: 48px; }
-  .step-content h4 { font-family: 'Rajdhani', sans-serif; font-size: 1.1rem; font-weight: 600; color: #fff; letter-spacing: 1px; margin-bottom: 0.4rem; }
-  .step-content p { color: var(--muted); font-size: 0.88rem; }
-  code { background: rgba(0,212,255,0.1); color: var(--cyan); padding: 2px 8px; border-radius: 4px; font-size: 0.85em; font-family: monospace; }
-  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 3rem; }
-  .feature-item { display: flex; align-items: center; gap: 12px; background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.2rem; transition: border-color 0.2s; }
-  .feature-item:hover { border-color: rgba(0,212,255,0.3); }
-  .feature-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); flex-shrink: 0; }
-  .feature-item span { font-size: 0.85rem; color: var(--text); }
-  .person-box { display: grid; grid-template-columns: auto 1fr; gap: 2rem; align-items: center; background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 2.5rem; margin-top: 3rem; }
-  .person-avatar { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, rgba(0,212,255,0.3), rgba(88,101,242,0.3)); border: 2px solid rgba(0,212,255,0.3); display: flex; align-items: center; justify-content: center; font-family: 'Rajdhani', sans-serif; font-size: 1.8rem; font-weight: 700; color: var(--cyan); overflow: hidden; }
-  .person-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .person-name { font-family: 'Rajdhani', sans-serif; font-size: 1.4rem; font-weight: 700; color: #fff; letter-spacing: 1px; margin-bottom: 0.5rem; }
-  .person-role { font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; color: var(--cyan); margin-bottom: 0.5rem; }
-  .person-desc { font-size: 0.88rem; color: var(--muted); }
-  .discord-cta { text-align: center; padding: 5rem 2rem; position: relative; }
-  .discord-cta::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(88,101,242,0.08) 0%, transparent 70%); pointer-events: none; }
-  .discord-cta h2 { margin-bottom: 1rem; }
-  .discord-cta p { color: var(--muted); margin-bottom: 2rem; max-width: 450px; margin-left: auto; margin-right: auto; }
-  footer { border-top: 1px solid var(--border); padding: 2rem; text-align: center; color: var(--muted); font-size: 0.8rem; }
-  footer a { color: var(--muted); text-decoration: none; }
-  footer a:hover { color: var(--text); }
-  @media (max-width: 600px) {
-    nav { padding: 0 1.2rem; }
+  
+  body { 
+    background: var(--bg); 
+    color: var(--text); 
+    font-family: 'Plus Jakarta Sans', sans-serif; 
+    font-size: 15px; 
+    line-height: 1.7; 
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: max(2px, 2%) radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 0);
+    background-size: 24px 24px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  nav { 
+    position: fixed; 
+    top: 0; left: 0; right: 0; 
+    z-index: 100; 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    padding: 0 3rem; 
+    height: 70px; 
+    background: rgba(5, 5, 8, 0.8); 
+    backdrop-filter: blur(16px); 
+    border-bottom: 1px solid var(--border); 
+  }
+  
+  .nav-logo { 
+    font-family: 'Rajdhani', sans-serif; 
+    font-size: 1.6rem; 
+    font-weight: 700; 
+    letter-spacing: 3px; 
+    color: #fff; 
+  }
+  
+  .nav-logo span { color: var(--cyan); text-shadow: 0 0 10px var(--cyan-glow); }
+  
+  .nav-links { display: flex; gap: 2.5rem; }
+  
+  .nav-links a { 
+    color: var(--muted); 
+    text-decoration: none; 
+    font-size: 0.85rem; 
+    font-weight: 500;
+    letter-spacing: 1px; 
+    text-transform: uppercase;
+    transition: all 0.3s ease; 
+  }
+  
+  .nav-links a:hover { color: var(--cyan); transform: translateY(-1px); }
+
+  .hero { 
+    min-height: 85vh; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    text-align: center; 
+    padding: 8rem 2rem 4rem; 
+    position: relative; 
+    z-index: 2;
+  }
+  
+  .hero::before { 
+    content: ''; 
+    position: absolute; 
+    inset: 0; 
+    background: radial-gradient(circle 50vw at 50% 30%, rgba(0,212,255,0.07) 0%, transparent 70%); 
+    pointer-events: none; 
+  }
+  
+  .hero-badge { 
+    display: inline-flex; 
+    align-items: center; 
+    gap: 10px; 
+    background: rgba(0,212,255,0.05); 
+    border: 1px solid var(--border); 
+    border-radius: 4px; 
+    padding: 8px 20px; 
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.8rem; 
+    font-weight: 600;
+    letter-spacing: 2px; 
+    color: var(--cyan); 
+    margin-bottom: 2rem; 
+    clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
+  }
+  
+  h1 { 
+    font-family: 'Rajdhani', sans-serif; 
+    font-size: clamp(3.5rem, 9vw, 6.5rem); 
+    font-weight: 700; 
+    letter-spacing: 3px; 
+    line-height: 0.95; 
+    margin-bottom: 1rem; 
+    color: #fff; 
+    text-transform: uppercase;
+  }
+  
+  h1 span { 
+    color: var(--cyan); 
+    text-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+  }
+  
+  .hero-version { 
+    font-family: 'Rajdhani', sans-serif; 
+    font-size: 1.2rem; 
+    letter-spacing: 5px; 
+    color: var(--muted); 
+    margin-bottom: 2rem; 
+    font-weight: 500;
+  }
+  
+  .hero-sub { 
+    font-size: 1.15rem; 
+    color: var(--muted); 
+    max-width: 600px; 
+    margin: 0 auto 3rem; 
+    line-height: 1.8; 
+  }
+  
+  .hero-buttons { 
+    display: flex; 
+    gap: 1.2rem; 
+    flex-wrap: wrap; 
+    justify-content: center; 
+    z-index: 10;
+  }
+
+  .btn {
+    display: inline-flex; 
+    align-items: center; 
+    gap: 12px; 
+    font-weight: 600; 
+    font-size: 0.9rem; 
+    letter-spacing: 1px; 
+    padding: 16px 32px; 
+    border-radius: 4px; 
+    text-decoration: none; 
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); 
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  
+  .btn-download { background: var(--cyan); color: #050508; }
+  .btn-download:hover { 
+    background: #fff; 
+    transform: translateY(-3px); 
+    box-shadow: 0 12px 30px rgba(0,212,255,0.3); 
+  }
+  .btn-download svg { width: 18px; height: 18px; stroke: #050508; }
+
+  .btn-github { background: var(--github); color: #fff; border: 1px solid rgba(255,255,255,0.1); }
+  .btn-github:hover { 
+    background: #2f363d; 
+    border-color: rgba(255,255,255,0.25);
+    transform: translateY(-3px); 
+    box-shadow: 0 12px 30px rgba(0,0,0,0.5); 
+  }
+  .btn-github svg { width: 18px; height: 18px; fill: #fff; }
+  
+  .btn-discord { background: var(--accent); color: #fff; }
+  .btn-discord:hover { 
+    background: #4752c4; 
+    transform: translateY(-3px); 
+    box-shadow: 0 12px 30px rgba(88,101,242,0.3); 
+  }
+  .btn-discord svg { width: 20px; height: 20px; fill: #fff; }
+
+  .stats { 
+    position: relative;
+    z-index: 5;
+    display: flex; 
+    justify-content: center; 
+    gap: 4rem; 
+    flex-wrap: wrap; 
+    padding: 4rem 2rem; 
+    background: rgba(12, 13, 20, 0.5);
+    border-top: 1px solid var(--border); 
+    border-bottom: 1px solid var(--border); 
+    backdrop-filter: blur(8px);
+  }
+  
+  .stat { text-align: center; min-width: 150px; }
+  .stat-num { font-family: 'Rajdhani', sans-serif; font-size: 2.8rem; font-weight: 700; color: var(--cyan); display: block; line-height: 1; margin-bottom: 0.5rem; }
+  .stat-label { font-size: 0.8rem; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; font-weight: 500; }
+  
+  section { padding: 7rem 2rem; max-width: 1200px; margin: 0 auto; position: relative; z-index: 5; }
+  
+  .section-tag { font-family: 'Rajdhani', sans-serif; font-size: 0.8rem; letter-spacing: 4px; text-transform: uppercase; color: var(--cyan); margin-bottom: 1rem; font-weight: 600; }
+  
+  h2 { font-family: 'Rajdhani', sans-serif; font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 700; letter-spacing: 2px; color: #fff; margin-bottom: 1.5rem; text-transform: uppercase; }
+  
+  .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 4rem; }
+  .info-card { background: var(--bg-card); padding: 3rem 2.5rem; border: 1px solid var(--border); border-radius: 4px; transition: all 0.3s ease; }
+  .info-card:hover { background: var(--bg-card-hover); border-color: var(--border-hover); transform: translateY(-5px); }
+  .info-icon { font-size: 2.2rem; margin-bottom: 1.5rem; display: block; }
+  .info-card h3 { font-family: 'Rajdhani', sans-serif; font-size: 1.3rem; font-weight: 700; letter-spacing: 1px; color: #fff; margin-bottom: 1rem; text-transform: uppercase; }
+  .info-card p { font-size: 0.95rem; color: var(--muted); line-height: 1.7; }
+  
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 4rem; }
+  .feature-item { display: flex; align-items: center; gap: 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 1.2rem 1.5rem; transition: all 0.3s ease; }
+  .feature-item:hover { border-color: var(--cyan); background: var(--bg-card-hover); }
+  .feature-dot { width: 6px; height: 6px; background: var(--cyan); box-shadow: 0 0 8px var(--cyan); flex-shrink: 0; }
+  .feature-item span { font-size: 0.9rem; color: var(--text); font-weight: 500; }
+  
+  .steps { display: flex; flex-direction: column; gap: 1rem; margin-top: 4rem; }
+  .step { display: flex; gap: 2rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 2.5rem; align-items: flex-start; transition: all 0.3s ease; }
+  .step:hover { border-color: var(--border-hover); background: var(--bg-card-hover); }
+  .step-num { font-family: 'Rajdhani', sans-serif; font-size: 3rem; font-weight: 700; color: rgba(0,212,255,0.15); line-height: 1; min-width: 60px; }
+  .step-content h4 { font-family: 'Rajdhani', sans-serif; font-size: 1.3rem; font-weight: 700; color: #fff; letter-spacing: 1px; margin-bottom: 0.5rem; text-transform: uppercase; }
+  .step-content p { color: var(--muted); font-size: 0.95rem; }
+  code { background: rgba(0,212,255,0.08); color: var(--cyan); padding: 4px 10px; border-radius: 4px; font-size: 0.9em; font-family: monospace; border: 1px solid rgba(0,212,255,0.15); }
+  
+  .team-container { display: flex; flex-direction: column; gap: 2rem; margin-top: 3rem; }
+  .person-box { display: grid; grid-template-columns: auto 1fr; gap: 3rem; align-items: center; background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 3rem; position: relative; overflow: hidden; }
+  .person-box::after { content: ''; position: absolute; bottom: 0; right: 0; width: 60px; height: 60px; background: linear-gradient(135deg, transparent 50%, rgba(0, 212, 255, 0.05) 50%); }
+  .person-avatar { width: 100px; height: 100px; border-radius: 4px; background: linear-gradient(135deg, #0c0d14, #121420); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: 'Rajdhani', sans-serif; font-size: 2rem; font-weight: 700; color: var(--cyan); overflow: hidden; }
+  .person-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .person-name { font-family: 'Rajdhani', sans-serif; font-size: 1.6rem; font-weight: 700; color: #fff; letter-spacing: 1px; margin-bottom: 0.3rem; }
+  .person-role { font-family: 'Rajdhani', sans-serif; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; color: var(--cyan); margin-bottom: 0.8rem; font-weight: 600; }
+  .person-desc { font-size: 0.95rem; color: var(--muted); }
+  .person-meta { font-family: monospace; font-size: 0.8rem; color: var(--cyan); margin-top: 1rem; display: inline-block; background: rgba(0, 212, 255, 0.05); padding: 2px 8px; border-radius: 4px; }
+
+  .discord-cta { text-align: center; padding: 8rem 2rem; position: relative; }
+  .discord-cta::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle 30vw at 50% 50%, rgba(88,101,242,0.06) 0%, transparent 70%); pointer-events: none; }
+  .discord-cta h2 { margin-bottom: 1.5rem; }
+  .discord-cta p { color: var(--muted); margin-bottom: 3rem; max-width: 500px; margin-left: auto; margin-right: auto; font-size: 1.05rem; }
+  
+  footer { border-top: 1px solid var(--border); padding: 3rem 2rem; text-align: center; color: var(--muted); font-size: 0.85rem; background: #030305; position: relative; z-index: 5; }
+  footer a { color: var(--muted); text-decoration: none; margin: 0 10px; transition: color 0.3s ease; font-weight: 500; }
+  footer a:hover { color: var(--cyan); }
+  footer p { margin-top: 1rem; opacity: 0.6; font-size: 0.8rem; letter-spacing: 0.5px; }
+
+  @media (max-width: 768px) {
+    nav { padding: 0 1.5rem; }
     .nav-links { display: none; }
-    .person-box { grid-template-columns: 1fr; text-align: center; }
+    .hero-buttons { flex-direction: column; width: 100%; max-width: 320px; }
+    .btn { justify-content: center; width: 100%; }
+    .person-box { grid-template-columns: 1fr; text-align: center; gap: 1.5rem; padding: 2rem; }
     .person-avatar { margin: 0 auto; }
+    .stats { gap: 2rem; padding: 3rem 1rem; }
+    .stat { min-width: 40%; }
   }
 </style>
 </head>
@@ -93,145 +282,160 @@
   <div class="nav-logo">BOOST<span>CORE</span></div>
   <div class="nav-links">
     <a href="#co-to">Co to jest</a>
+    <a href="#zawartosc">Zawartość</a>
     <a href="#jak-uzywac">Jak używać</a>
-    <a href="#autor">Autor</a>
+    <a href="#tworcy">Twórcy</a>
     <a href="https://github.com/BoostCore-web/" target="_blank">GitHub</a>
   </div>
 </nav>
 
-<div class="hero-buttons">
-    <a href="https://www.mediafire.com/file/4ncqoa0jg1y68qq/BoostCore_2.1_Setup.exe/file" class="btn-download" download="BoostCore_v2.0.exe">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 3v13M7 11l5 5 5-5M3 20h18"/></svg>
-      Pobierz BoostCore
-    </a>
-    <a href="https://discord.gg/9xCDrHtvvH" target="_blank" class="btn-discord">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.003.022.014.043.031.056a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-      Dołącz na Discord
-    </a>
+<div class="hero">
+  <div class="hero-badge">Optymizacja Windows na Najwyższy Poziom</div>
+  <h1>BOOST<span>CORE</span></h1>
+  <div class="hero-version">VERSION 2.0</div>
+  <p class="hero-sub">Zoptymalizuj system operacyjny Windows, zredukuj opóźnienia i wyciśnij maksymalną liczbę klatek na sekundę w grach jednym kliknięciem.</p>
+  
+  <div class="hero-buttons">
+      <a href="https://www.mediafire.com/file/4ncqoa0jg1y68qq/BoostCore_2.1_Setup.exe/file" class="btn btn-download">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 3v13M7 11l5 5 5-5M3 20h18"/></svg>
+        Pobierz BoostCore
+      </a>
+
+      <a href="https://github.com/BoostCore-web/" target="_blank" class="btn btn-github">
+        <svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        GitHub Projektu
+      </a>
+
+      <a href="https://discord.gg/9xCDrHtvvH" target="_blank" class="btn btn-discord">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.003.022.014.043.031.056a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+        Społeczność Discord
+      </a>
+  </div>
 </div>
 
 <div class="stats">
   <div class="stat"><span class="stat-num">+FPS</span><span class="stat-label">Wyższy framerate</span></div>
   <div class="stat"><span class="stat-num">↓LAG</span><span class="stat-label">Mniejszy input lag</span></div>
-  <div class="stat"><span class="stat-num">1 KLIK</span><span class="stat-label">Automatyczna optymalizacja</span></div>
-  <div class="stat"><span class="stat-num">FREE</span><span class="stat-label">W 100% za darmo</span></div>
+  <div class="stat"><span class="stat-num">1 KLIK</span><span class="stat-label">Pełna automatyzacja</span></div>
+  <div class="stat"><span class="stat-num">FREE</span><span class="stat-label">Open Source</span></div>
 </div>
 
 <section id="co-to">
-  <div class="section-tag">Co to jest</div>
-  <h2>Jeden plik. Pełna optymalizacja.</h2>
-  <p style="color: var(--muted); max-width: 600px;">BoostCore to gotowa paczka optymalizacyjna dla Windows 10 i 11. Bez zbędnych programów, bez skomplikowanych poradników.</p>
+  <div class="section-tag">O programie</div>
+  <h2>Jeden plik. Maksymalna wydajność.</h2>
+  <p style="color: var(--muted); max-width: 600px;">BoostCore usuwa zbędne obciążenia systemu, pozwalając podzespołom skupić całą moc na renderowaniu Twoich ulubionych gier.</p>
+  
   <div class="info-grid">
     <div class="info-card">
       <div class="info-icon">📦</div>
-      <h3>Co zawiera plik .exe?</h3>
-      <p>Wygodny, pojedynczy plik instalacyjny i optymalizacyjny. Wszystko gotowe do bezpiecznego uruchomienia jednym kliknięciem.</p>
+      <h3>Zoptymalizowany instalator</h3>
+      <p>Lekki, samodzielny plik .exe, który nie zaśmieca rejestru dodatkowymi procesami w tle.</p>
     </div>
     <div class="info-card">
       <div class="info-icon">⚡</div>
-      <h3>Co robi BoostCore?</h3>
-      <p>Optymalizuje ustawienia systemowe, wyłącza zbędne procesy Windows, zwiększa FPS, poprawia płynność i zmniejsza ścinki.</p>
+      <h3>Głębokie oczyszczanie</h3>
+      <p>Wyłącza telemetryczne usługi Windows, optymalizuje plan zasilania i usuwa zbędne ograniczenia sieciowe.</p>
     </div>
     <div class="info-card">
       <div class="info-icon">🔒</div>
-      <h3>Czy jest bezpieczny?</h3>
-      <p>Tak. BoostCore korzysta wyłącznie ze standardowych komend Windows. Możesz samodzielnie sprawdzić działanie aplikacji bez obaw o ukryte skrypty.</p>
+      <h3>Zbudowany na czystym kodzie</h3>
+      <p>Aplikacja bazuje na oficjalnych i bezpiecznych skryptach systemowych Windows bez ukrytych funkcji.</p>
     </div>
   </div>
 </section>
 
-<section style="padding-top: 0;">
-  <div class="section-tag">Zawartość</div>
-  <h2>Co zyskujesz?</h2>
+<section id="zawartosc" style="padding-top: 0;">
+  <div class="section-tag">Funkcje</div>
+  <h2>Co zyskujesz z BoostCore?</h2>
   <div class="features-grid">
-    <div class="feature-item"><div class="feature-dot"></div><span>Optymalizacja FPS</span></div>
-    <div class="feature-item"><div class="feature-dot"></div><span>Redukcja input laga</span></div>
-    <div class="feature-item"><div class="feature-dot"></div><span>Poprawa płynności</span></div>
-    <div class="feature-item"><div class="feature-dot"></div><span>Wyłączenie zbędnych procesów</span></div>
-    <div class="feature-item"><div class="feature-dot"></div><span>Optymalizacje gamingowe</span></div>
-    <div class="feature-item"><div class="feature-dot"></div><span>Tweaki systemowe</span></div>
-    <div class="feature-item"><div class="feature-dot"></div><span>Automatyczna konfiguracja</span></div>
-    <div class="feature-item"><div class="feature-dot"></div><span>Prosta instrukcja krok po kroku</span></div>
+    <div class="feature-item"><div class="feature-dot"></div><span>Drastyczny wzrost stabilności klatek</span></div>
+    <div class="feature-item"><div class="feature-dot"></div><span>Redukcja opóźnień myszy i klawiatury</span></div>
+    <div class="feature-item"><div class="feature-dot"></div><span>Wyczyszczenie pamięci RAM ze zbędnych usług</span></div>
+    <div class="feature-item"><div class="feature-dot"></div><span>Usunięcie bloatware i telemetrii</span></div>
+    <div class="feature-item"><div class="feature-dot"></div><span>Specjalne gamingowe tweaki rejestru</span></div>
+    <div class="feature-item"><div class="feature-dot"></div><span>Zoptymalizowana konfiguracja sieci pod gry online</span></div>
+    <div class="feature-item"><div class="feature-dot"></div><span>Brak konieczności konfiguracji manualnej</span></div>
+    <div class="feature-item"><div class="feature-dot"></div><span>Prosty, intuicyjny proces krok po kroku</span></div>
   </div>
 </section>
 
 <section id="jak-uzywac">
-  <div class="section-tag">Instrukcja</div>
-  <h2>Jak używać BoostCore?</h2>
+  <div class="section-tag">Instrukcja obsługi</div>
+  <h2>Jak poprawnie użyć narzędzia?</h2>
   <div class="steps">
     <div class="step">
       <div class="step-num">01</div>
       <div class="step-content">
-        <h4>Pobierz plik</h4>
-        <p>Pobierz najnowszą wersję pliku <code>BoostCore_v2.0.exe</code> na swój komputer.</p>
+        <h4>Pobierz stabilną paczkę</h4>
+        <p>Ściągnij najnowsze wydanie aplikacji <code>BoostCore_v2.0.exe</code> z oficjalnego źródła.</p>
       </div>
     </div>
     <div class="step">
       <div class="step-num">02</div>
       <div class="step-content">
-        <h4>Uruchom jako administrator</h4>
-        <p>Kliknij prawym przyciskiem na pobrany plik <code>BoostCore_v2.0.exe</code> → <em>Uruchom jako administrator</em>.</p>
+        <h4>Przyznaj uprawnienia administratora</h4>
+        <p>Uruchom plik prawym przyciskiem myszy i wybierz opcję <em>Uruchom jako administrator</em> w celu modyfikacji usług.</p>
       </div>
     </div>
     <div class="step">
       <div class="step-num">03</div>
       <div class="step-content">
-        <h4>Postępuj zgodnie z instrukcjami</h4>
-        <p>Cały proces jest automatyczny. Postępuj zgodnie z komunikatami na ekranie. Okno może na chwilę mignąć — to w pełni normalne.</p>
+        <h4>Zgoda na automatyczne skrypty</h4>
+        <p>Zatwierdź proces w konsoli. Okno aplikacji może na ułamek sekundy mignąć — system wdraża optymalizacje.</p>
       </div>
     </div>
     <div class="step">
       <div class="step-num">04</div>
       <div class="step-content">
         <h4>Zrestartuj komputer</h4>
-        <p>Po zakończeniu uruchom PC ponownie. System powinien działać szybciej, płynniej i stabilniej.</p>
+        <p>Zmień konfigurację sprzętową, uruchamiając PC ponownie. Ciesz się płynną i responsywną rozgrywką.</p>
       </div>
     </div>
   </div>
 </section>
 
-<section id="autor">
-  <div class="section-tag">Twórca</div>
-  <h2>Kim jest xCukierek__?</h2>
-  <div class="person-box">
-    <div class="person-avatar"><img src="data:image/png;base64,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" alt="xCukierek__"></div>
-    <div>
-      <div class="person-role">Twórca</div>
-      <div class="person-name">xCukierek__</div>
-      <p class="person-desc">Twórca BoostCore. Sam doświadczyłem spadków FPS, lagów i ścinków — zamiast każdemu kazać szukać rozwiązań po internetcie, zebrałem wszystkie sprawdzone metody w jednym miejscu. Celem było stworzenie czegoś prostego, skutecznego i bezpiecznego — nawet dla początkujących.</p>
+<section id="tworcy">
+  <div class="section-tag">Zespół projektowy</div>
+  <h2>Kto stoi za projektem?</h2>
+  
+  <div class="team-container">
+    <div class="person-box">
+      <div class="person-avatar"><img src="assets/img/cukier.png" alt="xCukierek__"></div>
+      <div>
+        <div class="person-role">Główny pomysłodawca & Research</div>
+        <div class="person-name">xCukierek__</div>
+        <p class="person-desc">Twórca BoostCore. Doświadczając problemów ze spadkami płynności i nagłymi ścinanami ekranu, postanowiłem zebrać wszystkie najbardziej skuteczne i przetestowane triki optymalizacyjne w jedną przejrzystą strukturę, oszczędzając czas tysiącom graczy.</p>
+      </div>
     </div>
-  </div>
 
-  <div class="section-tag" style="margin-top: 4rem;">Współpracownik</div>
-  <h2>Kim jest vxn?</h2>
-  <div class="person-box">
-    <div class="person-avatar"><img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAOYAuADASIAAhEBAxEB/8QAHQABAAIDAQEBAQAAAAAAAAAAAAgJBQYHBAECA//EAE4QAQAABAIGBgUJBQYCCgMAAAABAgMEBQYHERITIZIIMUFRU2EUFSIycRYjJEJSYnKBgjNzkaGiCUNEY7GyFyUmNDVUZHSDk6PBs8LT/8QAFgEBAQEAAAAAAAAAAAAAAAAAAAIB/8QAFhEBAQEAAAAAAAAAAAAAAAAAABEB/9oADAMBAAIRAxEAPwCIIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB+9zX8OryxNzX8OryxADc1/Dq8sTc1/Dq8sQA3Nfw6vLE3Nfw6vLEANzX8OryxNzX8OryxADc1/Dq8sTc1/Dq8sQA3Nfw6vLE3Nfw6vLEANzX8OryxNzX8OryxADc1/Dq8sTc1/Dq8sQA3Nfw6vLE3Nfw6vLEANzX8OryxNzX8OryxADc1/Dq8sTc1/Dq8sQA3Nfw6vLE3Nfw6vLEANzX8OryxNzX8OryxADc1/Dq8sTc1/Dq8sQA3Nfw6vLE3Nfw6vLEANzX8OryxNzX8OryxADc1/Dq8sTc1/Dq8sQA3Nfw6vLE3Nfw6vLEANzX8OryxNzX8OryxADc1/Dq8sTc1/Dq8sQA3Nfw6vLE3Nfw6vLEANzX8OryxNzX8OryxADc1/Dq8sTc1/Dq8sQA3Nfw6vLE3Nfw6vLEANzX8OryxNzX8OryxADc1/Dq8sTc1/Dq8sQA3Nfw6vLE3Nfw6vLEANzX8OryxNzX8OryxADc1/Dq8sTc1/Dq8sQA3Nfw6vLE3Nfw6vLEANzX8OryxNzX8OryxADc1/Dq8sTc1/Dq8sQA3Nfw6vLE3Nfw6vLEANzX8OryxNzX8OryxADc1/Dq8sTc1/Dq8sQA3Nfw6vLE3Nfw6vLEANzX8OryxNzX8OryxADc1/Dq8sTc1/Dq8sQA3Nfw6vLE3Nfw6vLEANzX8OryxNzX8OryxADc1/Dq8sTc1/Dq8sQA3Nfw6vLE3Nfw6vLEANzX8OryxNzX8OryxADc1/Dq8sTc1/Dq8sQA3Nfw6vLE3Nfw6vLEANzX8OryxNzX8OryxAH/9k=" alt="vxn"></div>
-    <div>
-      <div class="person-role">Współpracownik</div>
-      <div class="person-name">vxn</div>
-      <p class="person-desc">Kolega xCukierka__. To ja stoję za całą magią techniczną BoostCore. Przekułem nasze pomysły w kod, zaprojektowałem i od zera stworzyłem naszą stronę internetową, żeby wszystko działało płynnie i intuicyjnie. Podczas gdy on skupia się na metodach optymalizacji, ja dbam o to, abyście mieli do nich błyskawiczny i wygodny dostęp.</p>
+    <div class="person-box">
+      <div class="person-avatar"><img src="assets/img/vxn_pfp.jpg" alt="vxn"></div>
+      <div>
+        <div class="person-role">Główny programista & Web Dev</div>
+        <div class="person-name">vxn</div>
+        <p class="person-desc">Odpowiadam za kompletną warstwę technologiczną oraz architekturę BoostCore. Przekształciłem zebrane pomysły w czysty, zoptymalizowany kod produkcyjny oraz zaprojektowałem i zakodowałem naszą witrynę sieciową od zera, dbając o wydajność i nowoczesny interfejs użytkownika.</p>
+        <span class="person-meta">Discord ID: 1350145464506388500</span>
+      </div>
     </div>
   </div>
 </section>
 
 <div class="discord-cta">
-  <div class="section-tag" style="text-align:center;">Społeczność</div>
-  <h2>Masz pytanie lub problem?</h2>
-  <p>Dołącz na serwer Discord — pomagam tam osobiście. Wpadnij, zostaw opinię i bądź na bieżąco z aktualizacjami.</p>
-  <a href="https://discord.gg/9xCDrHtvvH" target="_blank" class="btn-discord">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.003.022.014.043.031.056a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-    Dołącz na Discord
+  <div class="section-tag">Wsparcie techniczne</div>
+  <h2>Napotkałeś problem lub błąd?</h2>
+  <p>Dołącz do naszego oficjalnego serwera Discord. Pomagamy tam osobiście, zbieramy feedback oraz publikujemy zapowiedzi kolejnych wersji systemowych optymalizatorów.</p>
+  <a href="https://discord.gg/9xCDrHtvvH" target="_blank" class="btn btn-discord">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.003.022.014.043.031.056a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+    Dołącz do nas na Discordzie
   </a>
 </div>
 
 <footer>
-  <p style="margin-bottom: 0.5rem;">
-    <a href="https://github.com/BoostCore-web/" target="_blank">GitHub</a> &nbsp;·&nbsp;
-    <a href="https://www.tiktok.com/@xcukierek__" target="_blank">TikTok</a> &nbsp;·&nbsp;
-    <a href="https://discord.gg/xaFGKUUjvx" target="_blank">Discord</a> &nbsp;·&nbsp;
-    <a href="https://youtube.com/@xcukierek" target="_blank">YouTube</a>
-  </p>
-  <p>BoostCore v2.0 &nbsp;·&nbsp; by xCukierek__ &nbsp;·&nbsp; Windows 10 / 11</p>
+  <div style="margin-bottom: 1rem;">
+    <a href="https://github.com/BoostCore-web/" target="_blank">GitHub</a> · 
+    <a href="https://discord.gg/9xCDrHtvvH" target="_blank">Discord Serwer</a>
+  </div>
+  <p>BoostCore v2.0 · Zaprojektowane dla Windows 10 / 11 · Wszelkie prawa zastrzeżone.</p>
 </footer>
 
 </body>
