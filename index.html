@@ -182,6 +182,15 @@
   }
   .btn-download svg { width: 18px; height: 18px; stroke: #050508; }
 
+  .btn-beta { background: rgba(0, 212, 255, 0.1); color: var(--cyan); border: 1px solid var(--border); }
+  .btn-beta:hover { 
+    background: rgba(0, 212, 255, 0.2); 
+    border-color: var(--cyan);
+    transform: translateY(-3px); 
+    box-shadow: 0 12px 30px rgba(0,212,255,0.15); 
+  }
+  .btn-beta svg { width: 18px; height: 18px; stroke: var(--cyan); }
+
   .btn-github { background: var(--github); color: #fff; border: 1px solid rgba(255,255,255,0.1); }
   .btn-github:hover { 
     background: #2f363d; 
@@ -299,6 +308,12 @@
       <a href="https://www.mediafire.com/file/4ncqoa0jg1y68qq/BoostCore_2.1_Setup.exe/file" class="btn btn-download">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 3v13M7 11l5 5 5-5M3 20h18"/></svg>
         Pobierz BoostCore
+      </a>
+
+      <!-- Added v3.0 BETA Button linking to ./404.html -->
+      <a href="./404.html" class="btn btn-beta">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 3v13M7 11l5 5 5-5M3 20h18"/></svg>
+        v3.0 BETA
       </a>
 
       <a href="https://github.com/BoostCore-web/" target="_blank" class="btn btn-github">
