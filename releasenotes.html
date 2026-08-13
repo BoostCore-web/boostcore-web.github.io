@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BoostCore - Informacje o wydaniu</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  :root {
+    --bg: #050508;
+    --bg-card: #0c0d14;
+    --bg-card-hover: #121420;
+    --border: rgba(0, 212, 255, 0.1);
+    --border-hover: rgba(0, 212, 255, 0.3);
+    --cyan: #00d4ff;
+    --cyan-glow: rgba(0, 212, 255, 0.15);
+    --text: #f1f1f5;
+    --muted: #7e8299;
+  }
+
+  html { scroll-behavior: smooth; }
+  
+  body { 
+    background: var(--bg); 
+    color: var(--text); 
+    font-family: 'Plus Jakarta Sans', sans-serif; 
+    font-size: 15px; 
+    line-height: 1.7; 
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: max(2px, 2%) radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 0);
+    background-size: 24px 24px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  nav { 
+    position: fixed; 
+    top: 0; left: 0; right: 0; 
+    z-index: 100; 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    padding: 0 3rem; 
+    height: 70px; 
+    background: rgba(5, 5, 8, 0.8); 
+    backdrop-filter: blur(16px); 
+    border-bottom: 1px solid var(--border); 
+  }
+  
+  .nav-logo { 
+    font-family: 'Rajdhani', sans-serif; 
+    font-size: 1.6rem; 
+    font-weight: 700; 
+    letter-spacing: 3px; 
+    color: #fff; 
+    text-decoration: none;
+  }
+  
+  .nav-logo span { color: var(--cyan); text-shadow: 0 0 10px var(--cyan-glow); }
+  
+  .nav-links { display: flex; gap: 2.5rem; align-items: center; }
+  
+  .nav-links a { 
+    color: var(--muted); 
+    text-decoration: none; 
+    font-size: 0.85rem; 
+    font-weight: 500;
+    letter-spacing: 1px; 
+    text-transform: uppercase;
+    transition: all 0.3s ease; 
+  }
+  
+  .nav-links a:hover { color: var(--cyan); transform: translateY(-1px); }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 10rem 2rem 6rem;
+    position: relative;
+    z-index: 5;
+  }
+
+  .section-tag { 
+    font-family: 'Rajdhani', sans-serif; 
+    font-size: 0.8rem; 
+    letter-spacing: 4px; 
+    text-transform: uppercase; 
+    color: var(--cyan); 
+    margin-bottom: 1rem; 
+    font-weight: 600; 
+  }
+  
+  h1 { 
+    font-family: 'Rajdhani', sans-serif; 
+    font-size: clamp(2.5rem, 5vw, 4rem); 
+    font-weight: 700; 
+    letter-spacing: 2px; 
+    color: #fff; 
+    margin-bottom: 3rem; 
+    text-transform: uppercase; 
+  }
+
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+    border-left: 2px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .timeline-item {
+    position: relative;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2rem;
+    transition: all 0.3s ease;
+  }
+
+  .timeline-item:hover {
+    border-color: var(--border-hover);
+    background: var(--bg-card-hover);
+    transform: translateY(-3px);
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -2.35rem;
+    top: 2.2rem;
+    width: 10px;
+    height: 10px;
+    background: var(--cyan);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--cyan);
+  }
+
+  .release-date {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 3px;
+    color: var(--cyan);
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .release-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+  }
+
+  .release-desc {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+
+  .release-list {
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .release-list li {
+    position: relative;
+    padding-left: 1.2rem;
+    color: var(--text);
+    font-size: 0.9rem;
+  }
+
+  .release-list li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--cyan);
+    font-weight: bold;
+  }
+
+  footer { 
+    border-top: 1px solid var(--border); 
+    padding: 3rem 2rem; 
+    text-align: center; 
+    color: var(--muted); 
+    font-size: 0.85rem; 
+    background: #030305; 
+    position: relative; 
+    z-index: 5; 
+  }
+  footer a { color: var(--muted); text-decoration: none; margin: 0 10px; transition: color 0.3s ease; font-weight: 500; }
+  footer a:hover { color: var(--cyan); }
+  footer p { margin-top: 1rem; opacity: 0.6; font-size: 0.8rem; letter-spacing: 0.5px; }
+
+  @media (max-width: 768px) {
+    nav { padding: 0 1.5rem; }
+    .nav-links { display: none; }
+    .container { padding-top: 8rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="./index.html" class="nav-logo">BOOST<span>CORE</span></a>
+  <div class="nav-links">
+    <a href="./index.html#co-to">Co to jest</a>
+    <a href="./index.html#zawartosc">Zawartość</a>
+    <a href="./index.html#jak-uzywac">Jak używać</a>
+    <a href="./index.html#tworcy">Twórcy</a>
+    <a href="./releasenotes.html" style="color: var(--cyan);">Release Notes</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="section-tag">Dziennik zmian</div>
+  <h1>Informacje o wydaniu</h1>
+
+  <div class="timeline">
+    
+    <div class="timeline-item">
+      <div class="release-date">Rok 0000 · Wersja 3.0 BETA</div>
+      <div class="release-title">Major System Overhaul</div>
+      <p class="release-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.</p>
+      <ul class="release-list">
+        <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
+        <li>Sed nisi lacus, dignissim quis pulvinar a, viverra eget lorem.</li>
+        <li>Praesent mauris. Fusce nec tellus sed augue semper porta.</li>
+      </ul>
+    </div>
+
+    <div class="timeline-item">
+      <div class="release-date">Rok 0000 · Wersja 2.1</div>
+      <div class="release-title">Performance & Stability Patch</div>
+      <p class="release-desc">Sed auctor neque eu tellus pellentesque ut auctor velit dictum. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo.</p>
+      <ul class="release-list">
+        <li>Proin sodales pulvinar sic tempor.</li>
+        <li>Sociis natoque penatibus et magnis dis parturient montes.</li>
+        <li>Aenean ultricies mi vitae est. Mauris placerat eleifend leo.</li>
+      </ul>
+    </div>
+
+    <div class="timeline-item">
+      <div class="release-date">Rok 0000 · Wersja 2.0</div>
+      <div class="release-title">Initial Release & Web Integration</div>
+      <p class="release-desc">Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor.</p>
+      <ul class="release-list">
+        <li>Maecenas mattis. Sed convallis tristique sem.</li>
+        <li>Proin ut ligula vel nunc egestas porttitor.</li>
+        <li>Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa.</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div style="margin-bottom: 1rem;">
+    <a href="https://github.com/BoostCore-web/" target="_blank">GitHub</a> · 
+    <a href="https://discord.gg/9xCDrHtvvH" target="_blank">Discord Serwer</a> · 
+    <a href="./releasenotes.html" style="color: var(--cyan);">Informacje o wydaniu</a>
+  </div>
+  <p>BoostCore · Zaprojektowane dla Windows 10 / 11 · Wszelkie prawa zastrzeżone.</p>
+</footer>
+
+</body>
+</html>
