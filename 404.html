@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 - BoostCore</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  :root {
+    --bg: #050508;
+    --bg-card: #0c0d14;
+    --bg-card-hover: #121420;
+    --border: rgba(0, 212, 255, 0.1);
+    --border-hover: rgba(0, 212, 255, 0.3);
+    --accent: #5865F2;
+    --cyan: #00d4ff;
+    --cyan-glow: rgba(0, 212, 255, 0.15);
+    --text: #f1f1f5;
+    --muted: #7e8299;
+  }
+
+  body { 
+    background: var(--bg); 
+    color: var(--text); 
+    font-family: 'Plus Jakarta Sans', sans-serif; 
+    font-size: 15px; 
+    line-height: 1.7; 
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: max(2px, 2%) radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 0);
+    background-size: 24px 24px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  nav { 
+    position: fixed; 
+    top: 0; left: 0; right: 0; 
+    z-index: 100; 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    padding: 0 3rem; 
+    height: 70px; 
+    background: rgba(5, 5, 8, 0.8); 
+    backdrop-filter: blur(16px); 
+    border-bottom: 1px solid var(--border); 
+  }
+  
+  .nav-logo { 
+    font-family: 'Rajdhani', sans-serif; 
+    font-size: 1.6rem; 
+    font-weight: 700; 
+    letter-spacing: 3px; 
+    color: #fff; 
+    text-decoration: none;
+  }
+  
+  .nav-logo span { color: var(--cyan); text-shadow: 0 0 10px var(--cyan-glow); }
+
+  .error-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 8rem 2rem 4rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .error-container::before { 
+    content: ''; 
+    position: absolute; 
+    inset: 0; 
+    background: radial-gradient(circle 40vw at 50% 50%, rgba(0,212,255,0.06) 0%, transparent 70%); 
+    pointer-events: none; 
+  }
+
+  .error-badge { 
+    display: inline-flex; 
+    align-items: center; 
+    gap: 10px; 
+    background: rgba(0,212,255,0.05); 
+    border: 1px solid var(--border); 
+    border-radius: 4px; 
+    padding: 8px 20px; 
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.8rem; 
+    font-weight: 600;
+    letter-spacing: 2px; 
+    color: var(--cyan); 
+    margin-bottom: 1.5rem; 
+    clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
+  }
+
+  h1 { 
+    font-family: 'Rajdhani', sans-serif; 
+    font-size: clamp(5rem, 15vw, 9rem); 
+    font-weight: 700; 
+    letter-spacing: 4px; 
+    line-height: 1; 
+    margin-bottom: 0.5rem; 
+    color: var(--cyan); 
+    text-shadow: 0 0 40px rgba(0, 212, 255, 0.2);
+  }
+
+  .error-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #fff;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .error-sub { 
+    font-size: 1.05rem; 
+    color: var(--muted); 
+    max-width: 500px; 
+    margin: 0 auto 2.5rem; 
+    line-height: 1.7; 
+  }
+
+  .btn {
+    display: inline-flex; 
+    align-items: center; 
+    gap: 12px; 
+    font-weight: 600; 
+    font-size: 0.9rem; 
+    letter-spacing: 1px; 
+    padding: 16px 32px; 
+    border-radius: 4px; 
+    text-decoration: none; 
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); 
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--cyan); 
+    color: #050508;
+  }
+  
+  .btn:hover { 
+    background: #fff; 
+    transform: translateY(-3px); 
+    box-shadow: 0 12px 30px rgba(0,212,255,0.3); 
+  }
+
+  .btn svg { width: 18px; height: 18px; stroke: #050508; }
+
+  footer { 
+    border-top: 1px solid var(--border); 
+    padding: 3rem 2rem; 
+    text-align: center; 
+    color: var(--muted); 
+    font-size: 0.85rem; 
+    background: #030305; 
+    position: relative; 
+    z-index: 5; 
+  }
+  
+  footer a { color: var(--muted); text-decoration: none; margin: 0 10px; transition: color 0.3s ease; font-weight: 500; }
+  footer a:hover { color: var(--cyan); }
+  footer p { margin-top: 1rem; opacity: 0.6; font-size: 0.8rem; letter-spacing: 0.5px; }
+
+  @media (max-width: 768px) {
+    nav { padding: 0 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="./index.html" class="nav-logo">BOOST<span>CORE</span></a>
+</nav>
+
+<div class="error-container">
+  <div class="error-badge">Błąd 404</div>
+  <h1>404</h1>
+  <div class="error-title">Strona nie została znaleziona</div>
+  <p class="error-sub">Wygląda na to, że szukana przez Ciebie podstrona lub wersja BETA jeszcze nie powstała albo została przeniesiona.</p>
+  
+  <a href="./index.html" class="btn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Powrót do strony głównej
+  </a>
+</div>
+
+<footer>
+  <div style="margin-bottom: 1rem;">
+    <a href="https://github.com/BoostCore-web/" target="_blank">GitHub</a> · 
+    <a href="https://discord.gg/9xCDrHtvvH" target="_blank">Discord Serwer</a>
+  </div>
+  <p>BoostCore · Zaprojektowane dla Windows 10 / 11 · Wszelkie prawa zastrzeżone.</p>
+</footer>
+
+</body>
+</html>
