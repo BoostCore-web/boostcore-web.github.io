@@ -405,6 +405,17 @@
     .stat { min-width: 40%; }
   }
 </style>
+<script>
+(function () {
+  var url = "https://boostcore-visits.viniobusinessyt.workers.dev/log";
+  fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ path: location.pathname }),
+    keepalive: true
+  }).catch(function () {});
+})();
+</script>
 </head>
 <body>
 
