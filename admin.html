@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>BoostCore Admin</title>
+<title>BoostCore – Panel administracyjny</title>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -113,7 +113,7 @@
   .login { position: relative; z-index: 2; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem 1rem; }
   .login::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle 45vw at 50% 30%, rgba(0, 212, 255, 0.07) 0%, transparent 70%); pointer-events: none; }
   .login-card {
-    position: relative; width: 100%; max-width: 480px;
+    position: relative; width: 100%; max-width: 520px;
     background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
     padding: 2.5rem; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
     display: flex; flex-direction: column; gap: 1.1rem;
@@ -132,8 +132,11 @@
   details[open] { padding-bottom: 1rem; }
   summary { cursor: pointer; font-size: 0.85rem; color: var(--muted); font-weight: 500; }
   details .grid2 { margin-top: 1rem; }
-  .err { background: rgba(255, 93, 108, 0.08); border: 1px solid rgba(255, 93, 108, 0.35); color: #ff9aa4; border-radius: 4px; padding: 0.75rem 1rem; font-size: 0.85rem; }
+  .err { background: rgba(255, 93, 108, 0.08); border: 1px solid rgba(255, 93, 108, 0.35); color: #ff9aa4; border-radius: 4px; padding: 0.75rem 1rem; font-size: 0.85rem; display: flex; flex-direction: column; gap: 0.6rem; align-items: flex-start; }
   .howto { padding-left: 1.2rem; color: var(--muted); font-size: 0.82rem; display: flex; flex-direction: column; gap: 0.35rem; border-top: 1px solid var(--border); padding-top: 1.1rem; margin-top: 0.25rem; padding-left: 2rem; }
+  .permbox { background: rgba(0, 212, 255, 0.05); border: 1px solid var(--border-hover); border-radius: 4px; padding: 0.9rem 1rem; font-size: 0.82rem; color: var(--text); display: flex; flex-direction: column; gap: 0.45rem; }
+  .permbox b { color: var(--cyan); }
+  .permbox .ttl { font-family: 'Rajdhani', sans-serif; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; color: #fff; font-size: 0.8rem; }
 
   /* ---------- App shell ---------- */
   #app { position: relative; z-index: 2; }
@@ -195,6 +198,43 @@
   .preview-wrap.mobile iframe { width: 390px; max-width: 100%; }
   textarea.raw { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.78rem; min-height: 60vh; line-height: 1.5; white-space: pre; tab-size: 2; }
 
+  /* ---------- Dashboard ---------- */
+  .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.25rem; }
+  .stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 1.2rem 1.4rem; }
+  .stat-card .num { font-family: 'Rajdhani', sans-serif; font-size: 2.2rem; font-weight: 700; color: #fff; line-height: 1.1; }
+  .stat-card .lbl { font-size: 0.78rem; color: var(--muted); margin-top: 0.3rem; letter-spacing: 0.3px; }
+  .stat-card.accent .num { color: var(--cyan); }
+
+  .conn-pill { display: inline-flex; align-items: center; gap: 8px; font-size: 0.78rem; font-weight: 600; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border); }
+  .conn-pill.ok { color: var(--ok); border-color: rgba(61,220,151,.35); background: rgba(61,220,151,.08); }
+  .conn-pill.bad { color: var(--danger); border-color: rgba(255,93,108,.35); background: rgba(255,93,108,.08); }
+  .conn-pill.off { color: var(--muted); }
+  .conn-pill::before { content:''; width:7px; height:7px; border-radius:50%; background: currentColor; box-shadow: 0 0 6px currentColor; }
+
+  .chart { display: flex; align-items: flex-end; gap: 6px; height: 160px; padding-top: 1rem; }
+  .chart-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; justify-content: flex-end; min-width: 0; }
+  .chart-col .bar-wrap { width: 100%; height: 100%; display: flex; align-items: flex-end; }
+  .chart-col .bar { width: 100%; background: linear-gradient(180deg, var(--cyan), rgba(0,212,255,.25)); border-radius: 3px 3px 0 0; min-height: 2px; transition: height .3s ease; position: relative; }
+  .chart-col .bar:hover::after { content: attr(data-v); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: #000; color: #fff; font-size: 0.7rem; padding: 2px 6px; border-radius: 3px; white-space: nowrap; margin-bottom: 4px; }
+  .chart-col .day-label { font-size: 0.65rem; color: var(--muted); white-space: nowrap; }
+
+  .tbl-wrap { overflow-x: auto; }
+  table.tbl { width: 100%; border-collapse: collapse; font-size: 0.82rem; min-width: 640px; }
+  table.tbl th { text-align: left; color: var(--muted); font-weight: 600; font-size: 0.72rem; letter-spacing: 0.5px; text-transform: uppercase; padding: 8px 10px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  table.tbl td { padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: top; color: var(--text); }
+  table.tbl tr:last-child td { border-bottom: none; }
+  table.tbl .flag { font-size: 1.1rem; margin-right: 4px; }
+  table.tbl .ua-cell { max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); cursor: help; }
+  table.tbl .ip-cell { font-family: ui-monospace, Menlo, Consolas, monospace; }
+  table.tbl .ts-cell { white-space: nowrap; color: var(--muted); }
+
+  .code-wrap { position: relative; }
+  .code-wrap textarea { min-height: 220px; }
+  .code-wrap .copy-btn { position: absolute; top: 10px; right: 10px; }
+  .steps-mini { padding-left: 1.3rem; color: var(--text); font-size: 0.87rem; display: flex; flex-direction: column; gap: 0.55rem; }
+  .steps-mini li::marker { color: var(--cyan); font-weight: 700; }
+  .empty-state { text-align: center; padding: 2.5rem 1rem; color: var(--muted); font-size: 0.88rem; }
+
   /* ---------- Modal ---------- */
   .modal-overlay { position: fixed; inset: 0; background: rgba(5, 5, 8, 0.85); backdrop-filter: blur(8px); z-index: 1000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.25s ease; padding: 1rem; }
   .modal-overlay.active { opacity: 1; pointer-events: auto; }
@@ -238,34 +278,38 @@
 <!-- ================= LOGIN ================= -->
 <div class="login" id="login">
   <div class="login-card">
-    <div class="badge">ADMIN PANEL</div>
+    <div class="badge">PANEL ADMINISTRACYJNY</div>
     <div class="logo">BOOST<span>CORE</span></div>
-    <p class="lead">Edit the website and commit straight to GitHub. Changes go live once GitHub Pages redeploys, usually within a minute.</p>
+    <p class="lead">Edytuj witrynę i zatwierdzaj zmiany prosto do GitHub. Zmiany trafiają na stronę, gdy tylko GitHub Pages zakończy wdrożenie — zwykle w ciągu minuty.</p>
 
     <div class="field">
-      <label for="cToken">GitHub personal access token</label>
+      <label for="cToken">Token dostępu osobistego GitHub (PAT)</label>
       <input id="cToken" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_…">
     </div>
-    <label class="check"><input type="checkbox" id="cRemember"><span>Remember the token on this device</span></label>
+    <label class="check"><input type="checkbox" id="cRemember"><span>Zapamiętaj token na tym urządzeniu</span></label>
 
     <details id="cSettings">
-      <summary>Repository settings</summary>
+      <summary>Ustawienia repozytorium</summary>
       <div class="grid2">
-        <div class="field"><label for="cOwner">Owner</label><input id="cOwner" type="text" value="BoostCore-web"></div>
-        <div class="field"><label for="cRepo">Repository</label><input id="cRepo" type="text" value="boostcore-web.github.io"></div>
-        <div class="field"><label for="cBranch">Branch</label><input id="cBranch" type="text" value="main"></div>
-        <div class="field"><label for="cPath">File</label><input id="cPath" type="text" value="index.html"></div>
+        <div class="field"><label for="cOwner">Właściciel</label><input id="cOwner" type="text" value="BoostCore-web"></div>
+        <div class="field"><label for="cRepo">Repozytorium</label><input id="cRepo" type="text" value="boostcore-web.github.io"></div>
+        <div class="field"><label for="cBranch">Gałąź</label><input id="cBranch" type="text" value="main"></div>
+        <div class="field"><label for="cPath">Plik</label><input id="cPath" type="text" value="index.html"></div>
       </div>
     </details>
 
-    <div class="err hidden" id="loginErr" role="alert"></div>
-    <button class="btn btn-primary" id="connectBtn">Connect</button>
+    <div class="err hidden" id="loginErr" role="alert">
+      <span id="loginErrMsg"></span>
+      <button class="btn btn-plain btn-sm" id="retryTokenBtn" type="button">Wprowadź token ponownie</button>
+    </div>
+    <button class="btn btn-primary" id="connectBtn">Połącz</button>
 
     <ol class="howto">
-      <li>Open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">GitHub → New fine-grained token</a>.</li>
-      <li>Under <b>Repository access</b>, pick only the site repository.</li>
-      <li>Under <b>Permissions → Contents</b>, choose <code>Read and write</code>.</li>
-      <li>Generate the token and paste it above. It is only ever sent to <code>api.github.com</code>.</li>
+      <li>Otwórz <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">GitHub → New fine-grained token</a>.</li>
+      <li>W polu <b>Repository access</b> wybierz tylko repozytorium swojej witryny.</li>
+      <li>W polu <b>Permissions → Contents</b> ustaw <code>Read and write</code>.</li>
+      <li>Wygeneruj token i wklej go powyżej. Jest wysyłany wyłącznie do <code>api.github.com</code>.</li>
+      <li>Jeśli repozytorium należy do organizacji, właściciel organizacji może dodatkowo musieć zatwierdzić token typu fine-grained.</li>
     </ol>
   </div>
 </div>
@@ -278,12 +322,12 @@
       <div class="chip" id="repoChip"></div>
     </div>
     <div class="top-right">
-      <span class="pill" id="statusPill">No changes</span>
+      <span class="pill" id="statusPill">Brak zmian</span>
       <span class="chip top-user" id="userChip"></span>
-      <a class="btn btn-plain btn-sm" id="siteLink" href="#" target="_blank" rel="noopener">View site</a>
-      <button class="btn btn-plain btn-sm" id="discardBtn" title="Reload the file from GitHub and drop local edits">Discard</button>
-      <button class="btn btn-primary btn-sm" id="commitBtn" disabled>Review &amp; commit</button>
-      <button class="btn btn-plain btn-sm" id="logoutBtn">Sign out</button>
+      <a class="btn btn-plain btn-sm" id="siteLink" href="#" target="_blank" rel="noopener">Zobacz stronę</a>
+      <button class="btn btn-plain btn-sm" id="discardBtn" title="Wczytaj plik ponownie z GitHub i odrzuć lokalne zmiany">Odrzuć</button>
+      <button class="btn btn-primary btn-sm" id="commitBtn" disabled>Przejrzyj i zatwierdź</button>
+      <button class="btn btn-plain btn-sm" id="logoutBtn">Wyloguj</button>
     </div>
   </header>
 
@@ -296,17 +340,17 @@
 <!-- ================= COMMIT MODAL ================= -->
 <div class="modal-overlay" id="commitModal">
   <div class="modal-content">
-    <h3>Review &amp; commit</h3>
+    <h3>Przejrzyj i zatwierdź</h3>
     <div class="sum" id="diffSum"></div>
     <div class="diff" id="diffBox"></div>
     <div class="field">
-      <label for="commitMsg">Commit message</label>
-      <input id="commitMsg" type="text" value="Update site content via BoostCore Admin">
+      <label for="commitMsg">Opis commita</label>
+      <input id="commitMsg" type="text" value="Aktualizacja treści witryny przez BoostCore Admin">
     </div>
     <div class="err hidden" id="commitErr" role="alert"></div>
     <div class="modal-actions">
-      <button class="btn btn-plain" id="commitCancel">Cancel</button>
-      <button class="btn btn-primary" id="commitGo">Commit to GitHub</button>
+      <button class="btn btn-plain" id="commitCancel">Anuluj</button>
+      <button class="btn btn-primary" id="commitGo">Zatwierdź do GitHub</button>
     </div>
   </div>
 </div>
@@ -329,6 +373,8 @@
 
   const TOKEN_KEY = 'bc_admin_token';
   const CFG_KEY = 'bc_admin_cfg';
+  const WORKER_URL_KEY = 'bc_admin_worker_url';
+  const WORKER_SECRET_KEY = 'bc_admin_worker_secret';
   const store = {
     get(k) { try { return sessionStorage.getItem(k) || localStorage.getItem(k) || ''; } catch (e) { return ''; } },
     set(k, v, persist) { try { sessionStorage.removeItem(k); localStorage.removeItem(k); (persist ? localStorage : sessionStorage).setItem(k, v); } catch (e) {} },
@@ -346,7 +392,7 @@
   let baseline = '';     // build() output right after load; used to detect edits
   let state = null;
   let dirty = false;
-  let cur = 'preview';
+  let cur = 'dashboard';
   let user = null;
 
   /* ==========================================================
@@ -389,7 +435,7 @@
 
   async function loadFile() {
     const f = await gh('GET', `/repos/${cfg.owner}/${cfg.repo}/contents/${encPath()}?ref=${encodeURIComponent(cfg.branch)}`);
-    if (!f.content) throw new Error('GitHub returned no content for this file (it may be larger than 1 MB).');
+    if (!f.content) throw new Error('GitHub nie zwrócił zawartości tego pliku (może być większy niż 1 MB).');
     sha = f.sha;
     remoteHtml = b64ToUtf8(f.content);
     baseHtml = remoteHtml;
@@ -400,12 +446,12 @@
   }
 
   function explain(e) {
-    if (e.status === 401) return 'GitHub rejected the token. It may be mistyped, expired or revoked.';
-    if (e.status === 403) return 'GitHub refused the request (' + e.message + '). If the repository belongs to an organization, an owner may need to approve the token.';
-    if (e.status === 404) return 'Not found. Check the owner, repository, branch and file name. The token must also have access to this repository.';
-    if (e.status === 409 || e.status === 422) return 'The file changed on GitHub after you loaded it (' + e.message + '). Use Discard to reload the latest version, then re-apply your edits.';
-    if (e instanceof TypeError) return 'Network error. Check your connection and try again.';
-    return e.message || 'Unknown error.';
+    if (e.status === 401) return 'GitHub odrzucił token. Może być błędnie wklejony, wygasły albo unieważniony.';
+    if (e.status === 403) return 'GitHub odmówił dostępu (' + e.message + '). Jeśli repozytorium należy do organizacji, jej właściciel może musieć zatwierdzić token.';
+    if (e.status === 404) return 'Nie znaleziono zasobu (404: Resource not accessible by personal access token). Sprawdź właściciela, repozytorium, gałąź i nazwę pliku, a przede wszystkim — czy token ma wybrane to repozytorium oraz uprawnienie Contents: Read and write.';
+    if (e.status === 409 || e.status === 422) return 'Plik zmienił się na GitHub od czasu wczytania (' + e.message + '). Użyj „Odrzuć”, aby wczytać najnowszą wersję, a potem nanieś zmiany ponownie.';
+    if (e instanceof TypeError) return 'Błąd sieci. Sprawdź połączenie i spróbuj ponownie.';
+    return e.message || 'Nieznany błąd.';
   }
 
   /* ==========================================================
@@ -798,9 +844,9 @@
         <div class="item-head">
           <span class="item-title"><i>${String(i + 1).padStart(2, '0')}</i>${esc(titleFn(it, i))}</span>
           <div class="item-actions">
-            <button class="icon-btn" data-act="up" data-list="${path}" data-i="${i}" title="Move up" aria-label="Move up" ${i === 0 ? 'disabled' : ''}>↑</button>
-            <button class="icon-btn" data-act="down" data-list="${path}" data-i="${i}" title="Move down" aria-label="Move down" ${i === arr.length - 1 ? 'disabled' : ''}>↓</button>
-            <button class="icon-btn danger" data-act="del" data-list="${path}" data-i="${i}" title="Delete" aria-label="Delete">✕</button>
+            <button class="icon-btn" data-act="up" data-list="${path}" data-i="${i}" title="Przesuń w górę" aria-label="Przesuń w górę" ${i === 0 ? 'disabled' : ''}>↑</button>
+            <button class="icon-btn" data-act="down" data-list="${path}" data-i="${i}" title="Przesuń w dół" aria-label="Przesuń w dół" ${i === arr.length - 1 ? 'disabled' : ''}>↓</button>
+            <button class="icon-btn danger" data-act="del" data-list="${path}" data-i="${i}" title="Usuń" aria-label="Usuń">✕</button>
           </div>
         </div>
         <div class="item-body">${bodyFn(it, i)}</div>
@@ -809,37 +855,321 @@
   }
 
   const NEW = {
-    'nav': { label: 'New link', href: '#', blank: false },
-    'stats': { num: '00', label: 'Label' },
-    'about.cards': { icon: '✨', title: 'New card', desc: 'Describe it here.' },
-    'features.items': { text: 'New feature' },
-    'steps.items': { title: 'New step', desc: 'Describe this step.' },
-    'team.people': { img: '', role: 'Role', name: 'Name', desc: 'A short bio.', meta: '' },
+    'nav': { label: 'Nowy link', href: '#', blank: false },
+    'stats': { num: '00', label: 'Opis' },
+    'about.cards': { icon: '✨', title: 'Nowa karta', desc: 'Opisz ją tutaj.' },
+    'features.items': { text: 'Nowa funkcja' },
+    'steps.items': { title: 'Nowy krok', desc: 'Opisz ten krok.' },
+    'team.people': { img: '', role: 'Rola', name: 'Imię', desc: 'Krótki opis.', meta: '' },
     'footer.links': { label: 'Link', href: '#', blank: false, hl: false }
   };
 
-  const secHead = (key, note) => `<div class="panel"><h3>Section heading</h3><div class="grid2">${fld('Small label above the title', key + '.tag')}${fld('Title', key + '.title')}</div>${note || ''}</div>`;
+  const secHead = (key, note) => `<div class="panel"><h3>Nagłówek sekcji</h3><div class="grid2">${fld('Mały etykieta nad tytułem', key + '.tag')}${fld('Tytuł', key + '.title')}</div>${note || ''}</div>`;
+
+  /* ==========================================================
+   * Cloudflare Worker — kod i fragment śledzący
+   * ========================================================== */
+  const WORKER_CODE = `// BoostCore Admin — Worker rejestrujący odwiedziny (Cloudflare Workers + KV)
+// Wklej ten kod w: Cloudflare Dashboard -> Workers & Pages -> Twój Worker -> Edit code
+// Wymagane: przestrzeń KV powiazana pod nazwa "VISITS" oraz zmienna sekretna "ADMIN_SECRET"
+
+const ALLOWED_ORIGIN = "https://boostcore-web.github.io"; // adres Twojej witryny (i panelu admina)
+const MAX_RECENT = 200;    // ile ostatnich wizyt trzymac w tabeli
+const RETENTION_DAYS = 90; // po ilu dniach wygasaja dzienne liczniki
+
+function corsHeaders(origin) {
+  const allow = origin === ALLOWED_ORIGIN ? origin : ALLOWED_ORIGIN;
+  return {
+    "Access-Control-Allow-Origin": allow,
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, X-Admin-Secret",
+    "Vary": "Origin"
+  };
+}
+
+function flagFromCountry(cc) {
+  if (!cc || cc.length !== 2) return "";
+  const points = [...cc.toUpperCase()].map(c => 127397 + c.charCodeAt(0));
+  return String.fromCodePoint(...points);
+}
+
+function dayKey(d) {
+  return "day:" + d.toISOString().slice(0, 10);
+}
+
+async function handleLog(request, env) {
+  const cf = request.cf || {};
+  const ip = request.headers.get("CF-Connecting-IP") || "0.0.0.0";
+  const ua = (request.headers.get("User-Agent") || "").slice(0, 300);
+  const country = cf.country || "";
+  let path = "/";
+  try {
+    const body = await request.json();
+    if (body && typeof body.path === "string") path = body.path.slice(0, 200);
+  } catch (e) {}
+
+  const entry = { ip, ua, country, path, ts: Date.now() };
+
+  const [recentRaw, totalRaw] = await Promise.all([
+    env.VISITS.get("recent"),
+    env.VISITS.get("total")
+  ]);
+  const recent = recentRaw ? JSON.parse(recentRaw) : [];
+  recent.unshift(entry);
+  if (recent.length > MAX_RECENT) recent.length = MAX_RECENT;
+
+  const newTotal = (parseInt(totalRaw || "0", 10) || 0) + 1;
+  const key = dayKey(new Date());
+  const dayCountRaw = await env.VISITS.get(key);
+  const newDayCount = (parseInt(dayCountRaw || "0", 10) || 0) + 1;
+
+  await Promise.all([
+    env.VISITS.put("recent", JSON.stringify(recent)),
+    env.VISITS.put("total", String(newTotal)),
+    env.VISITS.put(key, String(newDayCount), { expirationTtl: RETENTION_DAYS * 86400 })
+  ]);
+
+  return new Response(JSON.stringify({ ok: true }), {
+    headers: { "Content-Type": "application/json", ...corsHeaders(request.headers.get("Origin")) }
+  });
+}
+
+async function handleStats(request, env) {
+  const secret = request.headers.get("X-Admin-Secret") || "";
+  if (!env.ADMIN_SECRET || secret !== env.ADMIN_SECRET) {
+    return new Response(JSON.stringify({ error: "unauthorized" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json", ...corsHeaders(request.headers.get("Origin")) }
+    });
+  }
+
+  const url = new URL(request.url);
+  const days = Math.min(60, Math.max(1, parseInt(url.searchParams.get("days") || "14", 10)));
+
+  const [recentRaw, totalRaw] = await Promise.all([
+    env.VISITS.get("recent"),
+    env.VISITS.get("total")
+  ]);
+  const recent = (recentRaw ? JSON.parse(recentRaw) : []).map(r => Object.assign({}, r, { flag: flagFromCountry(r.country) }));
+
+  const dayStats = [];
+  const now = new Date();
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(now);
+    d.setUTCDate(d.getUTCDate() - i);
+    const k = dayKey(d);
+    const c = await env.VISITS.get(k);
+    dayStats.push({ date: k.slice(4), count: parseInt(c || "0", 10) || 0 });
+  }
+
+  const todayCount = dayStats.length ? dayStats[dayStats.length - 1].count : 0;
+  const uniqueApprox = new Set(recent.map(r => r.ip)).size;
+
+  return new Response(JSON.stringify({
+    total: parseInt(totalRaw || "0", 10) || 0,
+    today: todayCount,
+    uniqueApprox,
+    days: dayStats,
+    recent
+  }), { headers: { "Content-Type": "application/json", ...corsHeaders(request.headers.get("Origin")) } });
+}
+
+export default {
+  async fetch(request, env) {
+    const origin = request.headers.get("Origin") || "";
+    if (request.method === "OPTIONS") return new Response(null, { headers: corsHeaders(origin) });
+    const url = new URL(request.url);
+    if (url.pathname === "/log" && request.method === "POST") return handleLog(request, env);
+    if (url.pathname === "/stats" && request.method === "GET") return handleStats(request, env);
+    return new Response("Not found", { status: 404, headers: corsHeaders(origin) });
+  }
+};
+`;
+
+  const TRACKER_CODE = '<script>\n' +
+'(function () {\n' +
+'  var url = "https://TWOJ-WORKER.TWOJ-KONTO.workers.dev/log";\n' +
+'  fetch(url, {\n' +
+'    method: "POST",\n' +
+'    headers: { "Content-Type": "application/json" },\n' +
+'    body: JSON.stringify({ path: location.pathname }),\n' +
+'    keepalive: true\n' +
+'  }).catch(function () {});\n' +
+'})();\n' +
+'<' + '/script>';
+
+  /* ==========================================================
+   * Panel Cloudflare Worker — pobieranie i renderowanie statystyk
+   * ========================================================== */
+  let dashData = null, dashLoading = false, dashError = '';
+
+  function workerCfg() {
+    return { url: (localStorage.getItem(WORKER_URL_KEY) || '').trim().replace(/\/+$/, ''), secret: localStorage.getItem(WORKER_SECRET_KEY) || '' };
+  }
+  function workerConfigured() { const c = workerCfg(); return !!(c.url && c.secret); }
+
+  async function fetchStats() {
+    const c = workerCfg();
+    if (!c.url || !c.secret) { dashData = null; dashError = ''; return; }
+    dashLoading = true; dashError = '';
+    try {
+      const res = await fetch(c.url + '/stats?days=14', { headers: { 'X-Admin-Secret': c.secret }, cache: 'no-store' });
+      if (res.status === 401) throw new Error('Worker odrzucił żądanie — nieprawidłowy sekret administratora.');
+      if (!res.ok) throw new Error('Worker zwrócił błąd HTTP ' + res.status + '.');
+      dashData = await res.json();
+    } catch (e) {
+      dashData = null;
+      dashError = e instanceof TypeError
+        ? 'Nie udało się połączyć z Workerem. Sprawdź adres URL, czy Worker jest wdrożony i czy CORS dopuszcza ten adres.'
+        : (e.message || 'Nieznany błąd połączenia z Workerem.');
+    } finally {
+      dashLoading = false;
+    }
+  }
+
+  function flagEmoji(cc) {
+    if (!cc || cc.length !== 2) return '';
+    try { return String.fromCodePoint(...[...cc.toUpperCase()].map(c => 127397 + c.charCodeAt(0))); } catch (e) { return ''; }
+  }
+  function fmtTime(ts) {
+    try { return new Date(ts).toLocaleString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }); }
+    catch (e) { return '—'; }
+  }
+  function fmtDay(dateStr) {
+    try { const [y, m, d] = dateStr.split('-'); return d + '.' + m; } catch (e) { return dateStr; }
+  }
+
+  function renderDashChart(days) {
+    const max = Math.max(1, ...days.map(d => d.count));
+    return `<div class="chart">${days.map(d => `
+      <div class="chart-col">
+        <div class="bar-wrap"><div class="bar" data-v="${d.count}" style="height:${Math.round((d.count / max) * 100)}%"></div></div>
+        <div class="day-label">${esc(fmtDay(d.date))}</div>
+      </div>`).join('')}</div>`;
+  }
+
+  function renderDashTable(recent) {
+    if (!recent.length) return `<div class="empty-state">Brak zarejestrowanych odwiedzin — jak tylko ktoś wejdzie na stronę, pojawi się tutaj.</div>`;
+    return `<div class="tbl-wrap"><table class="tbl"><thead><tr>
+      <th>Kraj</th><th>Adres IP</th><th>Data i godzina</th><th>Strona</th><th>User-Agent</th>
+    </tr></thead><tbody>${recent.map(r => `
+      <tr>
+        <td><span class="flag">${esc(r.flag || flagEmoji(r.country) || '🏳️')}</span>${esc(r.country || '—')}</td>
+        <td class="ip-cell">${esc(r.ip || '—')}</td>
+        <td class="ts-cell">${esc(fmtTime(r.ts))}</td>
+        <td>${esc(r.path || '/')}</td>
+        <td class="ua-cell" title="${esc(r.ua || '')}">${esc(r.ua || '—')}</td>
+      </tr>`).join('')}</tbody></table></div>`;
+  }
 
   /* ==========================================================
    * Views
    * ========================================================== */
   const SECTIONS = [
-    ['Edit', [['preview', 'Visual editor']]],
-    ['Content', [['hero', 'Hero'], ['beta', 'Beta modal'], ['stats', 'Stats bar'], ['about', 'About'], ['features', 'Features'], ['steps', 'How to use'], ['team', 'Team'], ['support', 'Support']]],
-    ['Site', [['general', 'General & nav'], ['footer', 'Footer']]],
-    ['Tools', [['raw', 'Raw HTML']]]
+    ['', [['dashboard', 'Strona główna']]],
+    ['EDYTOR', [
+      ['preview', 'Podgląd wizualny'],
+      ['general', 'Ogólne i nawigacja'],
+      ['hero', 'Sekcja Hero'],
+      ['beta', 'Modal powitalny'],
+      ['stats', 'Pasek statystyk'],
+      ['about', 'O programie'],
+      ['features', 'Zawartość'],
+      ['steps', 'Jak używać'],
+      ['team', 'Zespół'],
+      ['support', 'Wsparcie'],
+      ['footer', 'Stopka'],
+      ['raw', 'Kod HTML (Raw)']
+    ]]
   ];
 
   const views = {
-    general() {
-      return pageHead('General & navigation', 'Page title, brand name and the links in the top bar.') + `
-      <div class="panel"><h3>Brand</h3>
-        <div class="grid2">${fld('Page title (browser tab)', 'title')}${fld('Brand name, first part', 'brandA')}${fld('Brand name, highlighted part', 'brandB')}</div>
-        <small class="note">The brand appears in the top bar and as the hero headline.</small>
+    dashboard() {
+      const configured = workerConfigured();
+      const c = workerCfg();
+      return pageHead('Strona główna', 'Statystyki odwiedzin i dziennik bezpieczeństwa Twojej witryny, zasilane przez darmowego Cloudflare Workera.') + `
+
+      <div class="panel">
+        <div class="panel-head">
+          <h3>Status połączenia</h3>
+          <span class="conn-pill ${configured ? (dashError ? 'bad' : 'ok') : 'off'}" id="connPill">
+            ${configured ? (dashError ? 'Błąd połączenia' : 'Połączono') : 'Nie skonfigurowano'}
+          </span>
+        </div>
+        <p class="note" style="margin-top:0">${configured ? `Worker: <code>${esc(c.url)}</code>` : 'Skonfiguruj Worker poniżej, aby zobaczyć realne dane odwiedzin.'}</p>
+        ${dashError ? `<div class="err" style="margin-top:0.75rem"><span>${esc(dashError)}</span></div>` : ''}
+        <div class="row">
+          <button class="btn btn-ghost btn-sm" data-act="dash-refresh">Odśwież dane</button>
+        </div>
       </div>
-      <div class="panel"><h3>Navigation links</h3>
-        ${listUI('nav', n => n.label || 'Link', (n, i) => `<div class="grid2">${fld('Label', `nav.${i}.label`)}${fld('Link', `nav.${i}.href`)}</div>${fld('Open in a new tab', `nav.${i}.blank`, { type: 'check' })}`, 'Add link', true)}
-        <small class="note">Section anchors on the site: <code>#co-to</code> <code>#zawartosc</code> <code>#jak-uzywac</code> <code>#tworcy</code></small>
+
+      ${configured && dashData ? `
+      <div class="dash-grid">
+        <div class="stat-card accent"><div class="num">${dashData.total.toLocaleString('pl-PL')}</div><div class="lbl">Łączna liczba odwiedzin</div></div>
+        <div class="stat-card"><div class="num">${dashData.today.toLocaleString('pl-PL')}</div><div class="lbl">Odwiedziny dzisiaj</div></div>
+        <div class="stat-card"><div class="num">${dashData.uniqueApprox.toLocaleString('pl-PL')}</div><div class="lbl">Unikalne adresy IP (ost. ${dashData.recent.length})</div></div>
+      </div>
+
+      <div class="panel">
+        <h3>Ruch dzienny (ostatnie 14 dni)</h3>
+        ${renderDashChart(dashData.days)}
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h3>Dziennik bezpieczeństwa — ostatnie wizyty</h3></div>
+        ${renderDashTable(dashData.recent)}
+      </div>
+      ` : (configured && dashLoading ? `<div class="panel"><div class="empty-state">Wczytywanie danych z Workera…</div></div>` : '')}
+
+      <div class="panel">
+        <div class="panel-head"><h3>Konfiguracja Cloudflare Worker</h3></div>
+        <p class="note" style="margin-top:0">GitHub Pages nie zapisuje adresów IP odwiedzających ani żadnych logów. Aby mieć własny licznik odwiedzin i dziennik bezpieczeństwa, potrzebny jest mały, darmowy backend — Cloudflare Worker z magazynem KV. Poniżej znajdziesz gotowy kod i instrukcję krok po kroku.</p>
+
+        <ol class="steps-mini">
+          <li>Załóż darmowe konto na <a href="https://dash.cloudflare.com/sign-up" target="_blank" rel="noopener">dash.cloudflare.com</a> (plan Free w zupełności wystarczy).</li>
+          <li>Przejdź do <b>Workers &amp; Pages → Create → Create Worker</b>, nadaj mu nazwę (np. <code>boostcore-visits</code>) i kliknij <b>Deploy</b>.</li>
+          <li>Otwórz <b>Edit code</b> i wklej cały kod Workera z pola poniżej, zastępując domyślny szablon. Kliknij <b>Deploy</b>, aby zapisać.</li>
+          <li>W ustawieniach Workera przejdź do <b>Settings → Bindings</b> i dodaj powiązanie <b>KV Namespace</b>: utwórz nową przestrzeń nazw (np. <code>VISITS_KV</code>) i powiąż ją pod nazwą zmiennej <code>VISITS</code>.</li>
+          <li>Tam samo, w <b>Settings → Variables and Secrets</b>, dodaj sekretną zmienną <code>ADMIN_SECRET</code> z dowolnym, trudnym do odgadnięcia hasłem — to nim panel admina będzie się uwierzytelniał przy odczycie statystyk.</li>
+          <li>Skopiuj publiczny adres Workera (postaci <code>https://nazwa.twoje-konto.workers.dev</code>) i wklej go poniżej razem z sekretem.</li>
+          <li>Skopiuj fragment śledzący (drugie pole poniżej) i wklej go w pliku <code>index.html</code> Twojej witryny, tuż przed znacznikiem <code>&lt;/body&gt;</code> — najprościej zrobisz to w zakładce <b>Kod HTML (Raw)</b>. Podmień w nim adres Workera na swój własny.</li>
+        </ol>
+
+        <div class="field" style="margin-top:1.25rem"><label>Kod Workera (skopiuj do Cloudflare)</label>
+          <div class="code-wrap">
+            <textarea class="raw" readonly spellcheck="false" id="workerCodeBox" rows="10">${esc(WORKER_CODE)}</textarea>
+            <button class="btn btn-plain btn-sm copy-btn" data-act="copy" data-target="workerCodeBox">Kopiuj</button>
+          </div>
+        </div>
+
+        <div class="field" style="margin-top:1rem"><label>Fragment śledzący (wklej do index.html przed &lt;/body&gt;)</label>
+          <div class="code-wrap">
+            <textarea class="raw" readonly spellcheck="false" id="trackerCodeBox" rows="6" style="min-height:110px">${esc(TRACKER_CODE)}</textarea>
+            <button class="btn btn-plain btn-sm copy-btn" data-act="copy" data-target="trackerCodeBox">Kopiuj</button>
+          </div>
+        </div>
+
+        <div class="grid2" style="margin-top:1.25rem">
+          <div class="field"><label for="dashWorkerUrl">Adres URL Workera</label><input id="dashWorkerUrl" type="text" placeholder="https://boostcore-visits.twoje-konto.workers.dev" value="${esc(c.url)}"></div>
+          <div class="field"><label for="dashWorkerSecret">Sekret administratora</label><input id="dashWorkerSecret" type="password" autocomplete="off" placeholder="ten sam, co ADMIN_SECRET" value="${esc(c.secret)}"></div>
+        </div>
+        <div class="row">
+          <button class="btn btn-primary btn-sm" data-act="dash-save">Zapisz i połącz</button>
+          ${configured ? '<button class="btn btn-plain btn-sm" data-act="dash-clear">Usuń konfigurację</button>' : ''}
+        </div>
+        <small class="note">Adres i sekret są zapisywane wyłącznie lokalnie w przeglądarce tego urządzenia. Pamiętaj, że adresy IP są danymi osobowymi w rozumieniu RODO — warto ograniczyć okres ich przechowywania (ustawienie <code>RETENTION_DAYS</code> w kodzie Workera) i wspomnieć o tym w polityce prywatności witryny.</small>
+      </div>`;
+    },
+
+    general() {
+      return pageHead('Ogólne i nawigacja', 'Tytuł strony, nazwa marki i linki w górnym pasku.') + `
+      <div class="panel"><h3>Marka</h3>
+        <div class="grid2">${fld('Tytuł strony (karta przeglądarki)', 'title')}${fld('Nazwa marki, pierwsza część', 'brandA')}${fld('Nazwa marki, wyróżniona część', 'brandB')}</div>
+        <small class="note">Marka pojawia się w górnym pasku oraz jako nagłówek sekcji hero.</small>
+      </div>
+      <div class="panel"><h3>Linki nawigacji</h3>
+        ${listUI('nav', n => n.label || 'Link', (n, i) => `<div class="grid2">${fld('Etykieta', `nav.${i}.label`)}${fld('Link', `nav.${i}.href`)}</div>${fld('Otwórz w nowej karcie', `nav.${i}.blank`, { type: 'check' })}`, 'Dodaj link', true)}
+        <small class="note">Kotwice sekcji na stronie: <code>#co-to</code> <code>#zawartosc</code> <code>#jak-uzywac</code> <code>#tworcy</code></small>
       </div>`;
     },
 
@@ -847,108 +1177,108 @@
       const hb = (key, title, withHref) => {
         const b = state.hero[key];
         if (!b.found) return '';
-        return `<div class="panel"><div class="panel-head"><h3>${title}</h3>${fld('Visible', `hero.${key}.show`, { type: 'check' })}</div>
-          <div class="grid2">${fld('Button label', `hero.${key}.label`)}${withHref ? fld('Link', `hero.${key}.href`) : ''}</div></div>`;
+        return `<div class="panel"><div class="panel-head"><h3>${title}</h3>${fld('Widoczny', `hero.${key}.show`, { type: 'check' })}</div>
+          <div class="grid2">${fld('Etykieta przycisku', `hero.${key}.label`)}${withHref ? fld('Link', `hero.${key}.href`) : ''}</div></div>`;
       };
-      return pageHead('Hero', 'The first thing visitors see: badge, version, tagline and the main buttons.') + `
-      <div class="panel"><h3>Text</h3><div class="stack">
-        ${fld('Badge', 'hero.badge')}
-        ${fld('Version line', 'hero.version', { hint: 'Shown under the headline, e.g. <code>WERSJA 2.1</code>.' })}
-        ${fld('Tagline', 'hero.sub', { type: 'area', rows: 3 })}
+      return pageHead('Sekcja Hero', 'Pierwsza rzecz, jaką widzą odwiedzający: odznaka, wersja, hasło i główne przyciski.') + `
+      <div class="panel"><h3>Tekst</h3><div class="stack">
+        ${fld('Odznaka', 'hero.badge')}
+        ${fld('Linia wersji', 'hero.version', { hint: 'Wyświetlana pod nagłówkiem, np. <code>WERSJA 2.1</code>.' })}
+        ${fld('Hasło (tagline)', 'hero.sub', { type: 'area', rows: 3 })}
       </div></div>
-      ${hb('download', 'Download button', true)}
-      ${hb('beta', 'Beta button', false)}
-      ${hb('github', 'GitHub button', true)}
-      ${hb('discord', 'Discord button', true)}
-      <small class="note">Hidden buttons stay in the page source, so you can bring them back later.</small>`;
+      ${hb('download', 'Przycisk pobierania', true)}
+      ${hb('beta', 'Przycisk bety', false)}
+      ${hb('github', 'Przycisk GitHub', true)}
+      ${hb('discord', 'Przycisk Discord', true)}
+      <small class="note">Ukryte przyciski pozostają w kodzie strony, więc można je później przywrócić.</small>`;
     },
 
     beta() {
       const m = state.modal;
-      if (!m.found) return pageHead('Beta modal', 'The warning shown before opening the beta.') + '<div class="panel"><p class="note">No beta modal was found in this file.</p></div>';
-      return pageHead('Beta modal', 'The confirmation dialog shown before visitors open the beta build.') + `
-      <div class="panel"><h3>Dialog text</h3><div class="stack">
-        ${fld('Title', 'modal.title')}
-        ${fld('Message (HTML allowed)', 'modal.text', { type: 'area', rows: 4, hint: 'Wrap words in <code>&lt;span&gt;…&lt;/span&gt;</code> to highlight them in cyan.' })}
-        <div class="grid2">${fld('Input placeholder', 'modal.placeholder')}${fld('Cancel button', 'modal.cancel')}${fld('Confirm button', 'modal.submit')}</div>
+      if (!m.found) return pageHead('Modal powitalny', 'Okno ostrzeżenia przed otwarciem wersji beta.') + '<div class="panel"><p class="note">W tym pliku nie znaleziono modala beta.</p></div>';
+      return pageHead('Modal powitalny', 'Okno potwierdzenia pokazywane przed otwarciem wersji beta.') + `
+      <div class="panel"><h3>Treść okna</h3><div class="stack">
+        ${fld('Tytuł', 'modal.title')}
+        ${fld('Wiadomość (HTML dozwolony)', 'modal.text', { type: 'area', rows: 4, hint: 'Otocz słowa <code>&lt;span&gt;…&lt;/span&gt;</code>, aby wyróżnić je na cyjanowo.' })}
+        <div class="grid2">${fld('Placeholder pola', 'modal.placeholder')}${fld('Przycisk Anuluj', 'modal.cancel')}${fld('Przycisk Potwierdź', 'modal.submit')}</div>
       </div></div>
-      <div class="panel"><h3>Behaviour</h3>
+      <div class="panel"><h3>Zachowanie</h3>
         <div class="grid2">
-          ${m.hasKeyword ? fld('Keyword visitors must type', 'modal.keyword', { hint: 'Saved in uppercase. Update the message above if you change it.' }) : ''}
-          ${m.hasRedirect ? fld('Redirect after confirming', 'modal.redirect', { hint: 'For example <code>./beta.html</code> or a full URL.' }) : ''}
+          ${m.hasKeyword ? fld('Słowo kluczowe do wpisania', 'modal.keyword', { hint: 'Zapisywane wielkimi literami. Zaktualizuj powyższą wiadomość po zmianie.' }) : ''}
+          ${m.hasRedirect ? fld('Przekierowanie po potwierdzeniu', 'modal.redirect', { hint: 'Na przykład <code>./beta.html</code> lub pełny adres URL.' }) : ''}
         </div>
-        ${(!m.hasKeyword || !m.hasRedirect) ? '<small class="note">Part of the modal script was not recognised, so those settings are hidden. Use Raw HTML to edit them.</small>' : ''}
+        ${(!m.hasKeyword || !m.hasRedirect) ? '<small class="note">Część skryptu modala nie została rozpoznana, więc te ustawienia są ukryte. Użyj zakładki Kod HTML (Raw).</small>' : ''}
       </div>`;
     },
 
     stats() {
-      return pageHead('Stats bar', 'The highlights strip below the hero.') + `<div class="panel">
-        ${listUI('stats', s => s.num, (s, i) => `<div class="grid2">${fld('Big text', `stats.${i}.num`)}${fld('Caption', `stats.${i}.label`)}</div>`, 'Add stat', true)}</div>`;
+      return pageHead('Pasek statystyk', 'Pasek wyróżnionych liczb pod sekcją hero.') + `<div class="panel">
+        ${listUI('stats', s => s.num, (s, i) => `<div class="grid2">${fld('Duży tekst', `stats.${i}.num`)}${fld('Podpis', `stats.${i}.label`)}</div>`, 'Dodaj statystykę', true)}</div>`;
     },
 
     about() {
-      return pageHead('About', 'The “what is it” section and its cards.') + secHead('about') + `
-      <div class="panel"><h3>Intro text</h3>${fld('Paragraph (HTML allowed)', 'about.text', { type: 'area', rows: 3 })}</div>
-      <div class="panel"><h3>Cards</h3>
-        ${listUI('about.cards', c => c.title, (c, i) => `<div class="grid2">${fld('Icon (emoji)', `about.cards.${i}.icon`)}${fld('Title', `about.cards.${i}.title`)}</div>${fld('Description (HTML allowed)', `about.cards.${i}.desc`, { type: 'area', rows: 3 })}`, 'Add card')}
+      return pageHead('O programie', 'Sekcja „czym to jest” wraz z kartami.') + secHead('about') + `
+      <div class="panel"><h3>Tekst wprowadzający</h3>${fld('Akapit (HTML dozwolony)', 'about.text', { type: 'area', rows: 3 })}</div>
+      <div class="panel"><h3>Karty</h3>
+        ${listUI('about.cards', c => c.title, (c, i) => `<div class="grid2">${fld('Ikona (emoji)', `about.cards.${i}.icon`)}${fld('Tytuł', `about.cards.${i}.title`)}</div>${fld('Opis (HTML dozwolony)', `about.cards.${i}.desc`, { type: 'area', rows: 3 })}`, 'Dodaj kartę')}
       </div>`;
     },
 
     features() {
-      return pageHead('Features', 'The grid of short benefit lines.') + secHead('features') + `<div class="panel"><h3>Items</h3>
-        ${listUI('features.items', f => f.text, (f, i) => fld('Text', `features.items.${i}.text`), 'Add feature', true)}</div>`;
+      return pageHead('Zawartość', 'Siatka krótkich linijek opisujących korzyści.') + secHead('features') + `<div class="panel"><h3>Pozycje</h3>
+        ${listUI('features.items', f => f.text, (f, i) => fld('Tekst', `features.items.${i}.text`), 'Dodaj pozycję', true)}</div>`;
     },
 
     steps() {
-      return pageHead('How to use', 'Numbered instructions. Numbers follow the order below.') + secHead('steps') + `<div class="panel"><h3>Steps</h3>
-        ${listUI('steps.items', s => s.title, (s, i) => `${fld('Title', `steps.items.${i}.title`)}${fld('Description (HTML allowed)', `steps.items.${i}.desc`, { type: 'area', rows: 3, hint: 'Use <code>&lt;code&gt;file.exe&lt;/code&gt;</code> for the cyan file-name style.' })}`, 'Add step')}</div>`;
+      return pageHead('Jak używać', 'Numerowana instrukcja. Numery wynikają z kolejności poniżej.') + secHead('steps') + `<div class="panel"><h3>Kroki</h3>
+        ${listUI('steps.items', s => s.title, (s, i) => `${fld('Tytuł', `steps.items.${i}.title`)}${fld('Opis (HTML dozwolony)', `steps.items.${i}.desc`, { type: 'area', rows: 3, hint: 'Użyj <code>&lt;code&gt;plik.exe&lt;/code&gt;</code> dla cyjanowego stylu nazwy pliku.' })}`, 'Dodaj krok')}</div>`;
     },
 
     team() {
-      return pageHead('Team', 'People behind the project.') + secHead('team') + `<div class="panel"><h3>Members</h3>
+      return pageHead('Zespół', 'Osoby stojące za projektem.') + secHead('team') + `<div class="panel"><h3>Członkowie</h3>
         ${listUI('team.people', p => p.name, (p, i) => `
-          <div class="grid2">${fld('Name', `team.people.${i}.name`)}${fld('Role', `team.people.${i}.role`)}</div>
-          ${fld('Photo URL', `team.people.${i}.img`, { ph: 'https://…', hint: 'Any public image link, or a file path in your repository such as <code>./img/vxn.jpg</code>.' })}
-          ${fld('Bio (HTML allowed)', `team.people.${i}.desc`, { type: 'area', rows: 4 })}
-          ${fld('Extra line (optional)', `team.people.${i}.meta`, { hint: 'Shown as a small monospace tag under the bio. Leave empty to hide it.' })}`, 'Add member')}</div>`;
+          <div class="grid2">${fld('Imię', `team.people.${i}.name`)}${fld('Rola', `team.people.${i}.role`)}</div>
+          ${fld('Adres URL zdjęcia', `team.people.${i}.img`, { ph: 'https://…', hint: 'Dowolny publiczny link do obrazka albo ścieżka pliku w repozytorium, np. <code>./img/vxn.jpg</code>.' })}
+          ${fld('Bio (HTML dozwolony)', `team.people.${i}.desc`, { type: 'area', rows: 4 })}
+          ${fld('Dodatkowa linia (opcjonalnie)', `team.people.${i}.meta`, { hint: 'Wyświetlana jako mały monospace tag pod bio. Zostaw puste, aby ukryć.' })}`, 'Dodaj członka')}</div>`;
     },
 
     support() {
-      return pageHead('Support', 'The call-to-action above the footer.') + secHead('support') + `
-      <div class="panel"><h3>Content</h3><div class="stack">
-        ${fld('Text (HTML allowed)', 'support.text', { type: 'area', rows: 3 })}
-        <div class="grid2">${fld('Button label', 'support.label')}${fld('Button link', 'support.href')}</div>
+      return pageHead('Wsparcie', 'Wezwanie do działania nad stopką.') + secHead('support') + `
+      <div class="panel"><h3>Treść</h3><div class="stack">
+        ${fld('Tekst (HTML dozwolony)', 'support.text', { type: 'area', rows: 3 })}
+        <div class="grid2">${fld('Etykieta przycisku', 'support.label')}${fld('Link przycisku', 'support.href')}</div>
       </div></div>`;
     },
 
     footer() {
-      return pageHead('Footer', 'Links and copyright line at the bottom.') + `
-      <div class="panel"><h3>Links</h3>
-        ${listUI('footer.links', l => l.label, (l, i) => `<div class="grid2">${fld('Label', `footer.links.${i}.label`)}${fld('Link', `footer.links.${i}.href`)}</div>
-          <div class="row" style="margin-top:0">${fld('Open in a new tab', `footer.links.${i}.blank`, { type: 'check' })}${fld('Highlight in cyan', `footer.links.${i}.hl`, { type: 'check' })}</div>`, 'Add link')}
+      return pageHead('Stopka', 'Linki i linia praw autorskich na dole strony.') + `
+      <div class="panel"><h3>Linki</h3>
+        ${listUI('footer.links', l => l.label, (l, i) => `<div class="grid2">${fld('Etykieta', `footer.links.${i}.label`)}${fld('Link', `footer.links.${i}.href`)}</div>
+          <div class="row" style="margin-top:0">${fld('Otwórz w nowej karcie', `footer.links.${i}.blank`, { type: 'check' })}${fld('Wyróżnij na cyjanowo', `footer.links.${i}.hl`, { type: 'check' })}</div>`, 'Dodaj link')}
       </div>
-      <div class="panel"><h3>Bottom line</h3>${fld('Text', 'footer.text')}</div>`;
+      <div class="panel"><h3>Dolna linia</h3>${fld('Tekst', 'footer.text')}</div>`;
     },
 
     preview() {
-      return pageHead('Visual editor', 'Click any text with a dashed outline and type. Changes are kept as you go, then use Review &amp; commit to publish.') + `
+      return pageHead('Podgląd wizualny', 'Kliknij dowolny tekst obrysowany przerywaną linią i pisz. Zmiany są zapamiętywane na bieżąco — potem użyj „Przejrzyj i zatwierdź”, aby je opublikować.') + `
       <div class="toolbar">
-        <div class="seg"><button class="on" data-dev="desktop">Desktop</button><button data-dev="mobile">Mobile</button></div>
-        <button class="btn btn-ghost btn-sm" data-act="refresh-preview">Reload view</button>
+        <div class="seg"><button class="on" data-dev="desktop">Komputer</button><button data-dev="mobile">Telefon</button></div>
+        <button class="btn btn-ghost btn-sm" data-act="refresh-preview">Odśwież widok</button>
       </div>
-      <small class="note" style="margin:0 0 1rem">Buttons, links, images and adding or removing items are edited in the Content tabs on the left.</small>
-      <div class="preview-wrap" id="pvWrap"><iframe id="pv" title="Site preview" sandbox="allow-scripts allow-popups"></iframe></div>`;
+      <small class="note" style="margin:0 0 1rem">Przyciski, linki, obrazy oraz dodawanie i usuwanie pozycji edytuje się w zakładkach treści po lewej.</small>
+      <div class="preview-wrap" id="pvWrap"><iframe id="pv" title="Podgląd strony" sandbox="allow-scripts allow-popups"></iframe></div>`;
     },
 
     raw() {
-      return pageHead('Raw HTML', 'The full file as it will be committed. Edit anything, then apply it back to the form editor.') + `
+      return pageHead('Kod HTML (Raw)', 'Pełny plik w postaci, w jakiej zostanie zatwierdzony. Edytuj cokolwiek, a potem zastosuj to z powrotem w edytorze formularzowym.') + `
       <div class="panel">
         <textarea id="rawTa" class="raw" spellcheck="false"></textarea>
         <div class="row">
-          <button class="btn btn-primary btn-sm" data-act="apply-raw">Apply to editor</button>
-          <button class="btn btn-plain btn-sm" data-act="reset-raw">Reset to current form output</button>
+          <button class="btn btn-primary btn-sm" data-act="apply-raw">Zastosuj w edytorze</button>
+          <button class="btn btn-plain btn-sm" data-act="reset-raw">Przywróć bieżący wynik formularza</button>
         </div>
-        <small class="note">“Apply” re-reads the form fields from this code. Nothing is sent to GitHub until you use Review &amp; commit.</small>
+        <small class="note">„Zastosuj” odczytuje pola formularza na nowo z tego kodu. Nic nie trafia do GitHub, dopóki nie użyjesz „Przejrzyj i zatwierdź”.</small>
       </div>`;
     }
   };
@@ -957,7 +1287,7 @@
    * Rendering & navigation
    * ========================================================== */
   function renderSide() {
-    $('#side').innerHTML = SECTIONS.map(([g, items]) => `<h6>${g}</h6>` + items.map(([id, label]) => `<button data-go="${id}" class="${id === cur ? 'on' : ''}">${label}</button>`).join('')).join('');
+    $('#side').innerHTML = SECTIONS.map(([g, items]) => (g ? `<h6>${g}</h6>` : '') + items.map(([id, label]) => `<button data-go="${id}" class="${id === cur ? 'on' : ''}">${label}</button>`).join('')).join('');
   }
 
   function render() {
@@ -965,6 +1295,7 @@
     $('#main').innerHTML = views[cur]();
     if (cur === 'preview') loadPreview();
     if (cur === 'raw') $('#rawTa').value = build();
+    if (cur === 'dashboard') initDashboard();
   }
 
   function go(id) {
@@ -976,13 +1307,19 @@
 
   function loadPreview() { const f = $('#pv'); if (f) f.srcdoc = previewHtml(); }
 
+  function initDashboard() {
+    if (workerConfigured() && !dashData && !dashLoading) {
+      fetchStats().then(() => { if (cur === 'dashboard') render(); });
+    }
+  }
+
   let dt;
   function scheduleStatus() { clearTimeout(dt); dt = setTimeout(refreshStatus, 200); }
   function refreshStatus() {
     if (!state) return;
     try { dirty = build() !== baseline; } catch (e) { dirty = true; }
     const p = $('#statusPill');
-    p.textContent = dirty ? 'Unsaved changes' : 'No changes';
+    p.textContent = dirty ? 'Niezapisane zmiany' : 'Brak zmian';
     p.classList.toggle('dirty', dirty);
     $('#commitBtn').disabled = !dirty;
   }
@@ -991,9 +1328,22 @@
   function toast(msg, type, link) {
     const t = $('#toast');
     t.className = 'toast show ' + (type || '');
-    t.innerHTML = `<span>${esc(msg)}</span>` + (link ? ` <a href="${esc(link)}" target="_blank" rel="noopener">View commit</a>` : '');
+    t.innerHTML = `<span>${esc(msg)}</span>` + (link ? ` <a href="${esc(link)}" target="_blank" rel="noopener">Zobacz commit</a>` : '');
     clearTimeout(tt);
     tt = setTimeout(() => t.classList.remove('show'), 6500);
+  }
+
+  function copyText(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => toast('Skopiowano do schowka.', 'ok')).catch(() => toast('Nie udało się skopiować. Zaznacz i skopiuj ręcznie.', 'error'));
+    } else {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+        toast('Skopiowano do schowka.', 'ok');
+      } catch (e) { toast('Nie udało się skopiować. Zaznacz i skopiuj ręcznie.', 'error'); }
+    }
   }
 
   /* ==========================================================
@@ -1036,10 +1386,43 @@
       baseHtml = $('#rawTa').value;
       state = parseState(baseHtml);
       refreshStatus();
-      toast('Raw HTML applied to the editor.', 'ok');
+      toast('Kod HTML zastosowany w edytorze.', 'ok');
       return;
     }
     if (act === 'reset-raw') { $('#rawTa').value = build(); return; }
+
+    if (act === 'copy') {
+      const el = document.getElementById(b.dataset.target);
+      if (el) copyText(el.value);
+      return;
+    }
+
+    if (act === 'dash-save') {
+      const url = ($('#dashWorkerUrl').value || '').trim().replace(/\/+$/, '');
+      const secret = ($('#dashWorkerSecret').value || '').trim();
+      if (!url || !secret) { toast('Podaj adres URL Workera i sekret administratora.', 'error'); return; }
+      try { new URL(url); } catch (e) { toast('Adres URL Workera wygląda na nieprawidłowy.', 'error'); return; }
+      localStorage.setItem(WORKER_URL_KEY, url);
+      localStorage.setItem(WORKER_SECRET_KEY, secret);
+      dashData = null; dashError = '';
+      render();
+      fetchStats().then(() => { if (cur === 'dashboard') render(); toast(dashError ? dashError : 'Połączono z Workerem.', dashError ? 'error' : 'ok'); });
+      return;
+    }
+    if (act === 'dash-clear') {
+      if (!confirm('Usunąć zapisany adres Workera i sekret z tej przeglądarki?')) return;
+      localStorage.removeItem(WORKER_URL_KEY); localStorage.removeItem(WORKER_SECRET_KEY);
+      dashData = null; dashError = '';
+      render();
+      toast('Konfiguracja Workera usunięta.', 'ok');
+      return;
+    }
+    if (act === 'dash-refresh') {
+      if (!workerConfigured()) { toast('Najpierw skonfiguruj Worker poniżej.', 'error'); return; }
+      dashLoading = true; render();
+      fetchStats().then(() => { render(); if (dashError) toast(dashError, 'error'); });
+      return;
+    }
 
     const list = b.dataset.list, i = +b.dataset.i;
     const arr = getP(state, list);
@@ -1057,7 +1440,11 @@
   window.addEventListener('beforeunload', e => { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
 
   /* ---------- Login / session ---------- */
-  function showLoginError(msg) { const el = $('#loginErr'); el.textContent = msg; el.classList.toggle('hidden', !msg); }
+  function showLoginError(msg) {
+    const el = $('#loginErr');
+    $('#loginErrMsg').textContent = msg;
+    el.classList.toggle('hidden', !msg);
+  }
 
   async function connect() {
     showLoginError('');
@@ -1068,18 +1455,18 @@
       path: $('#cPath').value.trim().replace(/^\/+/, '') || 'index.html'
     };
     const tk = $('#cToken').value.trim();
-    if (!tk) { showLoginError('Paste your GitHub token first.'); return; }
-    if (!cfg.owner || !cfg.repo) { $('#cSettings').open = true; showLoginError('Owner and repository are required.'); return; }
+    if (!tk) { showLoginError('Najpierw wklej swój token GitHub.'); return; }
+    if (!cfg.owner || !cfg.repo) { $('#cSettings').open = true; showLoginError('Właściciel i repozytorium są wymagane.'); return; }
 
     const btn = $('#connectBtn');
-    btn.disabled = true; btn.textContent = 'Connecting…';
+    btn.disabled = true; btn.textContent = 'Łączenie…';
     token = tk;
     try {
       user = await gh('GET', '/user');
       let info;
       try { info = await gh('GET', `/repos/${cfg.owner}/${cfg.repo}`); }
-      catch (e) { if (e.status === 404) { $('#cSettings').open = true; throw new Error(`Repository ${cfg.owner}/${cfg.repo} was not found, or the token cannot see it. For a site at boostcore-web.github.io the repository is normally named boostcore-web.github.io.`); } throw e; }
-      if (info.permissions && info.permissions.push === false) throw new Error('This token can read the repository but not write to it. Give it Contents: Read and write.');
+      catch (e) { if (e.status === 404) { $('#cSettings').open = true; throw new Error(`Nie znaleziono repozytorium ${cfg.owner}/${cfg.repo} albo token go nie widzi. Dla witryny pod adresem boostcore-web.github.io repozytorium zwykle nazywa się boostcore-web.github.io.`); } throw e; }
+      if (info.permissions && info.permissions.push === false) throw new Error('Ten token może czytać repozytorium, ale nie może do niego zapisywać. Nadaj mu uprawnienie Contents: Read and write.');
       await loadFile();
 
       store.set(TOKEN_KEY, token, $('#cRemember').checked);
@@ -1090,8 +1477,15 @@
       if (e.status === 404 && /contents/i.test(e.message || '') === false && !$('#cSettings').open) $('#cSettings').open = true;
       showLoginError(explain(e));
     } finally {
-      btn.disabled = false; btn.textContent = 'Connect';
+      btn.disabled = false; btn.textContent = 'Połącz';
     }
+  }
+
+  function retryToken() {
+    showLoginError('');
+    $('#cToken').value = '';
+    store.del(TOKEN_KEY);
+    $('#cToken').focus();
   }
 
   function enter() {
@@ -1100,13 +1494,13 @@
     $('#repoChip').textContent = `${cfg.owner}/${cfg.repo} @ ${cfg.branch}`;
     $('#userChip').textContent = '@' + (user && user.login || '');
     $('#siteLink').href = siteUrl();
-    if (!state.valid) toast('This file does not look like the BoostCore index.html. Use Raw HTML if something is missing.', 'error');
+    if (!state.valid) toast('Ten plik nie wygląda jak index.html BoostCore. Jeśli czegoś brakuje, użyj zakładki Kod HTML (Raw).', 'error');
     go(cur);
     refreshStatus();
   }
 
   function logout() {
-    if (dirty && !confirm('You have unsaved changes. Sign out anyway?')) return;
+    if (dirty && !confirm('Masz niezapisane zmiany. Mimo to się wylogować?')) return;
     dirty = false; state = null; token = ''; store.del(TOKEN_KEY);
     $('#cToken').value = '';
     $('#app').classList.add('hidden');
@@ -1114,8 +1508,8 @@
   }
 
   async function discard() {
-    if (dirty && !confirm('Discard all unsaved changes and reload the file from GitHub?')) return;
-    try { await loadFile(); render(); refreshStatus(); toast('Reloaded from GitHub.', 'ok'); }
+    if (dirty && !confirm('Odrzucić wszystkie niezapisane zmiany i wczytać plik ponownie z GitHub?')) return;
+    try { await loadFile(); render(); refreshStatus(); toast('Wczytano ponownie z GitHub.', 'ok'); }
     catch (e) { toast(explain(e), 'error'); }
   }
 
@@ -1124,7 +1518,7 @@
     const built = build();
     const lines = diffLines(remoteHtml, built);
     const add = lines.filter(l => l.t === '+').length, del = lines.filter(l => l.t === '-').length;
-    $('#diffSum').innerHTML = add || del ? `<b class="a">+${add}</b> added, <b class="d">−${del}</b> removed in <code>${esc(cfg.path)}</code> on <code>${esc(cfg.branch)}</code>. The first commit may also include small formatting normalisations.` : 'No differences from the version on GitHub.';
+    $('#diffSum').innerHTML = add || del ? `<b class="a">+${add}</b> dodanych, <b class="d">−${del}</b> usuniętych w <code>${esc(cfg.path)}</code> na gałęzi <code>${esc(cfg.branch)}</code>. Pierwszy commit może też zawierać drobne ujednolicenia formatowania.` : 'Brak różnic względem wersji na GitHub.';
     $('#diffBox').innerHTML = renderDiff(lines);
     $('#commitErr').classList.add('hidden');
     $('#commitGo').disabled = !(add || del);
@@ -1135,9 +1529,9 @@
 
   async function commit() {
     const btn = $('#commitGo');
-    const msg = $('#commitMsg').value.trim() || 'Update site content via BoostCore Admin';
+    const msg = $('#commitMsg').value.trim() || 'Aktualizacja treści witryny przez BoostCore Admin';
     const content = build();
-    btn.disabled = true; btn.textContent = 'Committing…';
+    btn.disabled = true; btn.textContent = 'Zatwierdzanie…';
     $('#commitErr').classList.add('hidden');
     try {
       const res = await gh('PUT', `/repos/${cfg.owner}/${cfg.repo}/contents/${encPath()}`, {
@@ -1149,16 +1543,17 @@
       baseline = build();
       closeCommit();
       render(); refreshStatus();
-      toast('Committed. GitHub Pages will redeploy shortly.', 'ok', res.commit && res.commit.html_url);
+      toast('Zatwierdzono. GitHub Pages wdroży zmiany za chwilę.', 'ok', res.commit && res.commit.html_url);
     } catch (e) {
       const el = $('#commitErr'); el.textContent = explain(e); el.classList.remove('hidden');
     } finally {
-      btn.disabled = false; btn.textContent = 'Commit to GitHub';
+      btn.disabled = false; btn.textContent = 'Zatwierdź do GitHub';
     }
   }
 
   $('#connectBtn').addEventListener('click', connect);
   $('#cToken').addEventListener('keydown', e => { if (e.key === 'Enter') connect(); });
+  $('#retryTokenBtn').addEventListener('click', retryToken);
   $('#logoutBtn').addEventListener('click', logout);
   $('#discardBtn').addEventListener('click', discard);
   $('#commitBtn').addEventListener('click', openCommit);
@@ -1182,3 +1577,4 @@
 </script>
 </body>
 </html>
+
