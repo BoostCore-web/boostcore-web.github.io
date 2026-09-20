@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>BoostCore Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #050508;
+    --bg-card: #0c0d14;
+    --bg-card-hover: #121420;
+    --bg-input: #08090f;
+    --border: rgba(0, 212, 255, 0.1);
+    --border-hover: rgba(0, 212, 255, 0.3);
+    --accent: #5865F2;
+    --cyan: #00d4ff;
+    --cyan-glow: rgba(0, 212, 255, 0.15);
+    --text: #f1f1f5;
+    --muted: #7e8299;
+    --danger: #ff5d6c;
+    --ok: #3ddc97;
+    --warn: #ffb020;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 0);
+    background-size: 24px 24px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .hidden { display: none !important; }
+
+  a { color: var(--cyan); }
+
+  :focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600; font-size: 0.85rem; letter-spacing: 0.5px;
+    padding: 11px 22px; border-radius: 4px; border: 1px solid transparent;
+    cursor: pointer; text-decoration: none; color: var(--text);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+  .btn-primary { background: var(--cyan); color: #050508; }
+  .btn-primary:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 10px 26px rgba(0, 212, 255, 0.3); }
+  .btn-ghost { background: rgba(0, 212, 255, 0.06); color: var(--cyan); border-color: var(--border); }
+  .btn-ghost:hover { background: rgba(0, 212, 255, 0.14); border-color: var(--cyan); }
+  .btn-plain { background: rgba(255, 255, 255, 0.05); color: var(--muted); border-color: var(--border); }
+  .btn-plain:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+  .btn-sm { padding: 8px 14px; font-size: 0.8rem; }
+
+  .icon-btn {
+    width: 30px; height: 30px; border-radius: 4px; cursor: pointer;
+    background: transparent; color: var(--muted); border: 1px solid var(--border);
+    font-size: 0.9rem; line-height: 1; transition: all 0.2s ease;
+  }
+  .icon-btn:hover:not(:disabled) { color: var(--cyan); border-color: var(--cyan); }
+  .icon-btn.danger:hover:not(:disabled) { color: var(--danger); border-color: var(--danger); }
+  .icon-btn:disabled { opacity: 0.25; cursor: default; }
+
+  /* ---------- Form controls ---------- */
+  .field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .field > label { font-size: 0.75rem; color: var(--muted); font-weight: 500; letter-spacing: 0.4px; }
+  .field small, .note { font-size: 0.75rem; color: var(--muted); line-height: 1.5; }
+  .note { display: block; margin-top: 0.75rem; }
+  .note code, .field small code, .howto code, .lead code {
+    background: rgba(0, 212, 255, 0.08); color: var(--cyan); padding: 1px 6px; border-radius: 4px;
+    font-size: 0.9em; font-family: ui-monospace, Menlo, Consolas, monospace; border: 1px solid rgba(0, 212, 255, 0.15);
+  }
+
+  input[type="text"], input[type="password"], input[type="url"], textarea {
+    width: 100%;
+    background: var(--bg-input); border: 1px solid var(--border); border-radius: 4px;
+    color: var(--text); font-family: inherit; font-size: 0.9rem;
+    padding: 10px 12px; outline: none; transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  textarea { resize: vertical; line-height: 1.55; }
+  input:focus, textarea:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px var(--cyan-glow); }
+  ::placeholder { color: #4a4d61; }
+
+  .check { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; font-size: 0.85rem; color: var(--text); user-select: none; }
+  .check input { appearance: none; width: 18px; height: 18px; border: 1px solid var(--border-hover); border-radius: 4px; background: var(--bg-input); cursor: pointer; display: grid; place-content: center; flex-shrink: 0; }
+  .check input::after { content: ''; width: 8px; height: 8px; background: var(--cyan); border-radius: 2px; transform: scale(0); transition: transform 0.15s ease; }
+  .check input:checked::after { transform: scale(1); }
+
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1rem; }
+  .row { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; margin-top: 1rem; }
+
+  /* ---------- Login ---------- */
+  .login { position: relative; z-index: 2; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem 1rem; }
+  .login::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle 45vw at 50% 30%, rgba(0, 212, 255, 0.07) 0%, transparent 70%); pointer-events: none; }
+  .login-card {
+    position: relative; width: 100%; max-width: 480px;
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
+    padding: 2.5rem; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    display: flex; flex-direction: column; gap: 1.1rem;
+  }
+  .badge {
+    align-self: flex-start;
+    background: rgba(0, 212, 255, 0.05); border: 1px solid var(--border);
+    padding: 6px 18px; font-family: 'Rajdhani', sans-serif; font-size: 0.78rem; font-weight: 600;
+    letter-spacing: 2px; color: var(--cyan);
+    clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
+  }
+  .logo { font-family: 'Rajdhani', sans-serif; font-size: 2.6rem; font-weight: 700; letter-spacing: 3px; color: #fff; line-height: 1; }
+  .logo span { color: var(--cyan); text-shadow: 0 0 20px var(--cyan-glow); }
+  .lead { color: var(--muted); font-size: 0.92rem; }
+  details { border: 1px solid var(--border); border-radius: 4px; padding: 0.7rem 1rem; }
+  details[open] { padding-bottom: 1rem; }
+  summary { cursor: pointer; font-size: 0.85rem; color: var(--muted); font-weight: 500; }
+  details .grid2 { margin-top: 1rem; }
+  .err { background: rgba(255, 93, 108, 0.08); border: 1px solid rgba(255, 93, 108, 0.35); color: #ff9aa4; border-radius: 4px; padding: 0.75rem 1rem; font-size: 0.85rem; }
+  .howto { padding-left: 1.2rem; color: var(--muted); font-size: 0.82rem; display: flex; flex-direction: column; gap: 0.35rem; border-top: 1px solid var(--border); padding-top: 1.1rem; margin-top: 0.25rem; padding-left: 2rem; }
+
+  /* ---------- App shell ---------- */
+  #app { position: relative; z-index: 2; }
+
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0; height: 64px; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    padding: 0 1.5rem; background: rgba(5, 5, 8, 0.85); backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .top-left, .top-right { display: flex; align-items: center; gap: 1rem; min-width: 0; }
+  .brand { font-family: 'Rajdhani', sans-serif; font-size: 1.4rem; font-weight: 700; letter-spacing: 3px; color: #fff; white-space: nowrap; }
+  .brand span { color: var(--cyan); text-shadow: 0 0 10px var(--cyan-glow); }
+  .brand em { font-style: normal; font-size: 0.7rem; letter-spacing: 2px; color: var(--muted); margin-left: 8px; border: 1px solid var(--border); padding: 2px 8px; border-radius: 4px; vertical-align: middle; }
+  .chip { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.72rem; color: var(--muted); background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); padding: 4px 10px; border-radius: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pill { display: inline-flex; align-items: center; gap: 8px; font-size: 0.75rem; font-weight: 600; color: var(--muted); white-space: nowrap; }
+  .pill::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 8px var(--ok); }
+  .pill.dirty { color: var(--warn); }
+  .pill.dirty::before { background: var(--warn); box-shadow: 0 0 8px var(--warn); }
+
+  .layout { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 2.5rem; max-width: 1240px; margin: 0 auto; padding: 96px 1.5rem 5rem; align-items: start; }
+
+  .side { position: sticky; top: 88px; display: flex; flex-direction: column; gap: 0.25rem; }
+  .side h6 { font-family: 'Rajdhani', sans-serif; font-size: 0.72rem; letter-spacing: 3px; color: var(--muted); font-weight: 600; margin: 1rem 0 0.35rem 0.85rem; }
+  .side h6:first-child { margin-top: 0; }
+  .side button {
+    text-align: left; background: transparent; border: 1px solid transparent; border-left: 2px solid transparent;
+    color: var(--muted); font-family: inherit; font-size: 0.88rem; font-weight: 500;
+    padding: 9px 14px; border-radius: 4px; cursor: pointer; transition: all 0.2s ease;
+  }
+  .side button:hover { color: #fff; background: rgba(255, 255, 255, 0.03); }
+  .side button.on { color: var(--cyan); background: rgba(0, 212, 255, 0.06); border-left-color: var(--cyan); }
+
+  main { min-width: 0; }
+  .page-head { margin-bottom: 1.75rem; }
+  .page-head h2 { font-family: 'Rajdhani', sans-serif; font-size: 2rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #fff; line-height: 1.1; margin-bottom: 0.4rem; }
+  .page-head p { color: var(--muted); font-size: 0.9rem; max-width: 620px; }
+
+  .panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 1.5rem; margin-bottom: 1.25rem; }
+  .panel > h3, .panel-head h3 { font-family: 'Rajdhani', sans-serif; font-size: 1.05rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #fff; }
+  .panel > h3 { margin-bottom: 1rem; }
+  .panel-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+  .stack { display: flex; flex-direction: column; gap: 1rem; }
+
+  .item { border: 1px solid var(--border); border-radius: 4px; background: rgba(255, 255, 255, 0.015); margin-bottom: 0.75rem; }
+  .item-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.55rem 0.9rem; border-bottom: 1px solid var(--border); }
+  .item-title { font-family: 'Rajdhani', sans-serif; font-weight: 600; letter-spacing: 1px; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  .item-title i { font-style: normal; color: var(--cyan); margin-right: 10px; opacity: 0.7; }
+  .item-actions { display: flex; gap: 6px; flex-shrink: 0; }
+  .item-body { padding: 1rem; display: grid; gap: 1rem; }
+  .item.compact .item-body { padding: 0.75rem 1rem; }
+
+  .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+  .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+  .seg button { background: transparent; border: none; color: var(--muted); padding: 8px 18px; font-family: inherit; font-size: 0.82rem; font-weight: 600; cursor: pointer; }
+  .seg button.on { background: rgba(0, 212, 255, 0.12); color: var(--cyan); }
+  .preview-wrap { background: #000; border: 1px solid var(--border); border-radius: 4px; display: flex; justify-content: center; overflow: hidden; }
+  .preview-wrap iframe { border: 0; width: 100%; height: calc(100vh - 260px); min-height: 520px; background: var(--bg); transition: width 0.3s ease; }
+  .preview-wrap.mobile iframe { width: 390px; max-width: 100%; }
+  textarea.raw { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.78rem; min-height: 60vh; line-height: 1.5; white-space: pre; tab-size: 2; }
+
+  /* ---------- Modal ---------- */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(5, 5, 8, 0.85); backdrop-filter: blur(8px); z-index: 1000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.25s ease; padding: 1rem; }
+  .modal-overlay.active { opacity: 1; pointer-events: auto; }
+  .modal-content { background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 2rem; width: 100%; max-width: 760px; max-height: 92vh; overflow: auto; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8); transform: translateY(16px); transition: transform 0.25s ease; display: flex; flex-direction: column; gap: 1.1rem; }
+  .modal-overlay.active .modal-content { transform: translateY(0); }
+  .modal-content h3 { font-family: 'Rajdhani', sans-serif; font-size: 1.5rem; letter-spacing: 1px; text-transform: uppercase; color: #fff; }
+  .sum { font-size: 0.85rem; color: var(--muted); }
+  .sum b.a { color: var(--ok); } .sum b.d { color: var(--danger); }
+  .diff { max-height: 300px; overflow: auto; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; font: 12px/1.55 ui-monospace, Menlo, Consolas, monospace; }
+  .dl { display: flex; white-space: pre; min-width: max-content; }
+  .dl b { width: 1.8rem; text-align: center; flex-shrink: 0; color: var(--muted); font-weight: 400; }
+  .dl span { padding-right: 1rem; }
+  .dl.add { background: rgba(61, 220, 151, 0.1); } .dl.add b { color: var(--ok); }
+  .dl.del { background: rgba(255, 93, 108, 0.1); } .dl.del b { color: var(--danger); }
+  .dl.gap { color: var(--muted); padding-left: 0.8rem; }
+  .modal-actions { display: flex; gap: 0.75rem; justify-content: flex-end; flex-wrap: wrap; }
+
+  .toast { position: fixed; right: 1.5rem; bottom: 1.5rem; z-index: 2000; background: var(--bg-card); border: 1px solid var(--border-hover); border-left: 3px solid var(--cyan); border-radius: 4px; padding: 0.85rem 1.2rem; font-size: 0.88rem; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6); opacity: 0; transform: translateY(10px); pointer-events: none; transition: all 0.25s ease; max-width: 380px; }
+  .toast.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .toast.ok { border-left-color: var(--ok); }
+  .toast.error { border-left-color: var(--danger); }
+
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; gap: 1.25rem; padding-top: 84px; }
+    .side { position: static; flex-direction: row; overflow-x: auto; padding-bottom: 6px; gap: 6px; }
+    .side h6 { display: none; }
+    .side button { white-space: nowrap; border-left-width: 1px; }
+    .chip, .top-user { display: none; }
+    .topbar { padding: 0 1rem; }
+    .brand em { display: none; }
+  }
+  @media (max-width: 560px) {
+    .top-right .btn-plain { display: none; }
+    .login-card { padding: 1.75rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+</style>
+</head>
+<body>
+
+<!-- ================= LOGIN ================= -->
+<div class="login" id="login">
+  <div class="login-card">
+    <div class="badge">ADMIN PANEL</div>
+    <div class="logo">BOOST<span>CORE</span></div>
+    <p class="lead">Edit the website and commit straight to GitHub. Changes go live once GitHub Pages redeploys, usually within a minute.</p>
+
+    <div class="field">
+      <label for="cToken">GitHub personal access token</label>
+      <input id="cToken" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_…">
+    </div>
+    <label class="check"><input type="checkbox" id="cRemember"><span>Remember the token on this device</span></label>
+
+    <details id="cSettings">
+      <summary>Repository settings</summary>
+      <div class="grid2">
+        <div class="field"><label for="cOwner">Owner</label><input id="cOwner" type="text" value="BoostCore-web"></div>
+        <div class="field"><label for="cRepo">Repository</label><input id="cRepo" type="text" value="boostcore-web.github.io"></div>
+        <div class="field"><label for="cBranch">Branch</label><input id="cBranch" type="text" value="main"></div>
+        <div class="field"><label for="cPath">File</label><input id="cPath" type="text" value="index.html"></div>
+      </div>
+    </details>
+
+    <div class="err hidden" id="loginErr" role="alert"></div>
+    <button class="btn btn-primary" id="connectBtn">Connect</button>
+
+    <ol class="howto">
+      <li>Open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">GitHub → New fine-grained token</a>.</li>
+      <li>Under <b>Repository access</b>, pick only the site repository.</li>
+      <li>Under <b>Permissions → Contents</b>, choose <code>Read and write</code>.</li>
+      <li>Generate the token and paste it above. It is only ever sent to <code>api.github.com</code>.</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ================= APP ================= -->
+<div id="app" class="hidden">
+  <header class="topbar">
+    <div class="top-left">
+      <div class="brand">BOOST<span>CORE</span><em>ADMIN</em></div>
+      <div class="chip" id="repoChip"></div>
+    </div>
+    <div class="top-right">
+      <span class="pill" id="statusPill">No changes</span>
+      <span class="chip top-user" id="userChip"></span>
+      <a class="btn btn-plain btn-sm" id="siteLink" href="#" target="_blank" rel="noopener">View site</a>
+      <button class="btn btn-plain btn-sm" id="discardBtn" title="Reload the file from GitHub and drop local edits">Discard</button>
+      <button class="btn btn-primary btn-sm" id="commitBtn" disabled>Review &amp; commit</button>
+      <button class="btn btn-plain btn-sm" id="logoutBtn">Sign out</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="side" id="side"></aside>
+    <main id="main"></main>
+  </div>
+</div>
+
+<!-- ================= COMMIT MODAL ================= -->
+<div class="modal-overlay" id="commitModal">
+  <div class="modal-content">
+    <h3>Review &amp; commit</h3>
+    <div class="sum" id="diffSum"></div>
+    <div class="diff" id="diffBox"></div>
+    <div class="field">
+      <label for="commitMsg">Commit message</label>
+      <input id="commitMsg" type="text" value="Update site content via BoostCore Admin">
+    </div>
+    <div class="err hidden" id="commitErr" role="alert"></div>
+    <div class="modal-actions">
+      <button class="btn btn-plain" id="commitCancel">Cancel</button>
+      <button class="btn btn-primary" id="commitGo">Commit to GitHub</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ==========================================================
+   * Helpers
+   * ========================================================== */
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const clone = o => JSON.parse(JSON.stringify(o));
+  const getP = (o, p) => p.split('.').reduce((a, k) => (a == null ? a : a[k]), o);
+  const setP = (o, p, v) => { const ks = p.split('.'); const last = ks.pop(); ks.reduce((a, k) => a[k], o)[last] = v; };
+
+  const TOKEN_KEY = 'bc_admin_token';
+  const CFG_KEY = 'bc_admin_cfg';
+  const store = {
+    get(k) { try { return sessionStorage.getItem(k) || localStorage.getItem(k) || ''; } catch (e) { return ''; } },
+    set(k, v, persist) { try { sessionStorage.removeItem(k); localStorage.removeItem(k); (persist ? localStorage : sessionStorage).setItem(k, v); } catch (e) {} },
+    del(k) { try { sessionStorage.removeItem(k); localStorage.removeItem(k); } catch (e) {} }
+  };
+
+  /* ==========================================================
+   * App state
+   * ========================================================== */
+  let cfg = { owner: 'BoostCore-web', repo: 'boostcore-web.github.io', branch: 'main', path: 'index.html' };
+  let token = '';
+  let sha = '';
+  let remoteHtml = '';   // exactly what is on GitHub
+  let baseHtml = '';     // html the form state is applied on top of
+  let baseline = '';     // build() output right after load; used to detect edits
+  let state = null;
+  let dirty = false;
+  let cur = 'preview';
+  let user = null;
+
+  /* ==========================================================
+   * GitHub API
+   * ========================================================== */
+  async function gh(method, url, body) {
+    const res = await fetch('https://api.github.com' + url, {
+      method,
+      cache: 'no-store',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Accept': 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28',
+        'Content-Type': 'application/json'
+      },
+      body: body ? JSON.stringify(body) : undefined
+    });
+    let data = null;
+    try { data = await res.json(); } catch (e) {}
+    if (!res.ok) {
+      const err = new Error((data && data.message) || res.statusText);
+      err.status = res.status;
+      throw err;
+    }
+    return data;
+  }
+
+  function b64ToUtf8(b64) {
+    const bin = atob(b64.replace(/\s/g, ''));
+    const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
+    return new TextDecoder().decode(bytes);
+  }
+  function utf8ToB64(str) {
+    const bytes = new TextEncoder().encode(str);
+    let bin = '';
+    for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+    return btoa(bin);
+  }
+  const encPath = () => cfg.path.split('/').map(encodeURIComponent).join('/');
+
+  async function loadFile() {
+    const f = await gh('GET', `/repos/${cfg.owner}/${cfg.repo}/contents/${encPath()}?ref=${encodeURIComponent(cfg.branch)}`);
+    if (!f.content) throw new Error('GitHub returned no content for this file (it may be larger than 1 MB).');
+    sha = f.sha;
+    remoteHtml = b64ToUtf8(f.content);
+    baseHtml = remoteHtml;
+    state = parseState(baseHtml);
+    baseline = build();
+    dirty = false;
+    return state;
+  }
+
+  function explain(e) {
+    if (e.status === 401) return 'GitHub rejected the token. It may be mistyped, expired or revoked.';
+    if (e.status === 403) return 'GitHub refused the request (' + e.message + '). If the repository belongs to an organization, an owner may need to approve the token.';
+    if (e.status === 404) return 'Not found. Check the owner, repository, branch and file name. The token must also have access to this repository.';
+    if (e.status === 409 || e.status === 422) return 'The file changed on GitHub after you loaded it (' + e.message + '). Use Discard to reload the latest version, then re-apply your edits.';
+    if (e instanceof TypeError) return 'Network error. Check your connection and try again.';
+    return e.message || 'Unknown error.';
+  }
+
+  /* ==========================================================
+   * HTML  →  state  (parse)
+   * ========================================================== */
+  function parseDoc(html) { return new DOMParser().parseFromString(html, 'text/html'); }
+
+  function ownText(el) {
+    return [...el.childNodes].filter(n => n.nodeType === 3).map(n => n.nodeValue).join(' ').replace(/\s+/g, ' ').trim();
+  }
+  function setOwnText(el, text) {
+    const nodes = [...el.childNodes].filter(n => n.nodeType === 3 && n.nodeValue.trim());
+    if (nodes.length) {
+      const last = nodes[nodes.length - 1];
+      const lead = last.nodeValue.match(/^\s*/)[0];
+      const trail = last.nodeValue.match(/\s*$/)[0];
+      last.nodeValue = lead + text + trail;
+      nodes.slice(0, -1).forEach(n => n.remove());
+    } else {
+      el.appendChild(el.ownerDocument.createTextNode(text));
+    }
+  }
+
+  function parseState(html) {
+    const d = parseDoc(html);
+    const q = s => d.querySelector(s);
+    const qa = (s, r = d) => [...r.querySelectorAll(s)];
+    const T = el => (el ? el.textContent.trim() : '');
+    const H = el => (el ? el.innerHTML.trim() : '');
+    const head = r => ({ tag: T(r && r.querySelector('.section-tag')), title: T(r && r.querySelector('h2')) });
+    const btn = (sel, withHref) => {
+      const el = q(sel);
+      if (!el) return { found: false, label: '', href: '', show: true };
+      return { found: true, label: ownText(el), href: withHref ? (el.getAttribute('href') || '') : '', show: el.style.display !== 'none' };
+    };
+
+    const h1 = q('h1');
+    const scripts = qa('script').map(s => s.textContent).join('\n');
+    const mKey = scripts.match(/toUpperCase\(\)\s*===\s*'((?:[^'\\]|\\.)*)'/);
+    const mUrl = scripts.match(/window\.location\.href\s*=\s*'((?:[^'\\]|\\.)*)'/);
+    const unJs = v => v.replace(/\\(.)/g, '$1');
+
+    const co = q('#co-to'), fe = q('#zawartosc'), st = q('#jak-uzywac'), tw = q('#tworcy'), dc = q('.discord-cta'), ft = q('footer');
+    const sec = r => (r ? r.querySelector(':scope > p') : null);
+
+    return {
+      valid: !!(q('.hero') && co),
+      title: d.title || '',
+      brandA: h1 ? [...h1.childNodes].filter(n => n.nodeType === 3).map(n => n.nodeValue).join('').trim() : '',
+      brandB: T(h1 && h1.querySelector('span')),
+      nav: qa('.nav-links a').map(a => ({ label: T(a), href: a.getAttribute('href') || '', blank: a.getAttribute('target') === '_blank' })),
+      hero: {
+        badge: T(q('.hero-badge')),
+        version: T(q('.hero-version')),
+        sub: T(q('.hero-sub')),
+        download: btn('.btn-download', true),
+        beta: btn('.btn-beta', false),
+        github: btn('.btn-github', true),
+        discord: btn('.hero-buttons .btn-discord', true)
+      },
+      modal: {
+        found: !!q('.modal-content'),
+        title: T(q('.modal-content h3')),
+        text: H(q('.modal-content p')),
+        placeholder: q('#betaInput') ? (q('#betaInput').getAttribute('placeholder') || '') : '',
+        cancel: q('.btn-cancel') ? ownText(q('.btn-cancel')) : '',
+        submit: q('.btn-submit') ? ownText(q('.btn-submit')) : '',
+        keyword: mKey ? unJs(mKey[1]) : '',
+        redirect: mUrl ? unJs(mUrl[1]) : '',
+        hasKeyword: !!mKey,
+        hasRedirect: !!mUrl
+      },
+      stats: qa('.stats .stat').map(s => ({ num: T(s.querySelector('.stat-num')), label: T(s.querySelector('.stat-label')) })),
+      about: Object.assign(head(co), {
+        text: H(sec(co)),
+        cards: co ? qa('.info-card', co).map(c => ({ icon: T(c.querySelector('.info-icon')), title: T(c.querySelector('h3')), desc: H(c.querySelector('p')) })) : []
+      }),
+      features: Object.assign(head(fe), {
+        items: fe ? qa('.feature-item span', fe).map(s => ({ text: T(s) })) : []
+      }),
+      steps: Object.assign(head(st), {
+        items: st ? qa('.step', st).map(s => ({ title: T(s.querySelector('h4')), desc: H(s.querySelector('.step-content p')) })) : []
+      }),
+      team: Object.assign(head(tw), {
+        people: tw ? qa('.person-box', tw).map(b => {
+          const im = b.querySelector('img');
+          return {
+            img: im ? (im.getAttribute('src') || '') : '',
+            role: T(b.querySelector('.person-role')),
+            name: T(b.querySelector('.person-name')),
+            desc: H(b.querySelector('.person-desc')),
+            meta: T(b.querySelector('.person-meta'))
+          };
+        }) : []
+      }),
+      support: Object.assign(head(dc), {
+        text: H(sec(dc)),
+        label: dc && dc.querySelector('a.btn-discord') ? ownText(dc.querySelector('a.btn-discord')) : '',
+        href: dc && dc.querySelector('a.btn-discord') ? (dc.querySelector('a.btn-discord').getAttribute('href') || '') : ''
+      }),
+      footer: {
+        links: ft ? qa(':scope > div a', ft).map(a => ({ label: T(a), href: a.getAttribute('href') || '', blank: a.getAttribute('target') === '_blank', hl: a.hasAttribute('style') })) : [],
+        text: T(ft && ft.querySelector('p'))
+      }
+    };
+  }
+
+  /* ==========================================================
+   * state  →  HTML  (apply)
+   * ========================================================== */
+  function mk(d, tag, attrs, kids) {
+    const el = d.createElement(tag);
+    Object.entries(attrs || {}).forEach(([k, v]) => { if (v !== null && v !== undefined && v !== false) el.setAttribute(k, v === true ? '' : v); });
+    (kids || []).forEach(k => el.appendChild(typeof k === 'string' ? d.createTextNode(k) : k));
+    return el;
+  }
+  function leaf(d, tag, attrs, val, isHtml) {
+    const el = mk(d, tag, attrs);
+    if (isHtml) el.innerHTML = val || ''; else el.textContent = val || '';
+    return el;
+  }
+  // element whose children each sit on their own indented line
+  function blk(d, tag, attrs, kids, ind) {
+    const el = mk(d, tag, attrs);
+    kids.forEach(k => { el.appendChild(d.createTextNode('\n' + ind + '  ')); el.appendChild(k); });
+    el.appendChild(d.createTextNode('\n' + ind));
+    return el;
+  }
+  function fillList(d, container, nodes, ind, closeInd) {
+    container.textContent = '';
+    nodes.forEach(n => { container.appendChild(d.createTextNode('\n' + ind)); container.appendChild(n); });
+    container.appendChild(d.createTextNode('\n' + closeInd));
+  }
+  const jsStr = v => String(v).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/<\/script/gi, '<\\/script');
+
+  function applyState(d, st) {
+    const q = s => d.querySelector(s);
+    const sT = (el, v) => { if (el) el.textContent = v == null ? '' : v; };
+    const sH = (el, v) => { if (el) el.innerHTML = v == null ? '' : v; };
+    const head = (root, o) => { if (!root) return; sT(root.querySelector('.section-tag'), o.tag); sT(root.querySelector('h2'), o.title); };
+
+    // <title> + brand
+    d.title = st.title;
+    const brand = el => { if (!el) return; el.textContent = ''; el.appendChild(d.createTextNode(st.brandA)); el.appendChild(mk(d, 'span', {}, [st.brandB])); };
+    brand(q('.nav-logo'));
+    brand(q('h1'));
+
+    // navigation
+    const nl = q('.nav-links');
+    if (nl) fillList(d, nl, st.nav.map(n => mk(d, 'a', { href: n.href, target: n.blank ? '_blank' : null }, [n.label])), '    ', '  ');
+
+    // hero
+    sT(q('.hero-badge'), st.hero.badge);
+    sT(q('.hero-version'), st.hero.version);
+    sT(q('.hero-sub'), st.hero.sub);
+    const hb = (sel, o, withHref) => {
+      const el = q(sel);
+      if (!el || !o || !o.found) return;
+      setOwnText(el, o.label);
+      if (withHref) el.setAttribute('href', o.href);
+      if (o.show) { el.style.removeProperty('display'); if (!el.getAttribute('style')) el.removeAttribute('style'); }
+      else el.style.display = 'none';
+    };
+    hb('.btn-download', st.hero.download, true);
+    hb('.btn-beta', st.hero.beta, false);
+    hb('.btn-github', st.hero.github, true);
+    hb('.hero-buttons .btn-discord', st.hero.discord, true);
+
+    // beta modal
+    if (st.modal.found) {
+      sT(q('.modal-content h3'), st.modal.title);
+      sH(q('.modal-content p'), st.modal.text);
+      if (q('#betaInput')) q('#betaInput').setAttribute('placeholder', st.modal.placeholder);
+      if (q('.btn-cancel')) setOwnText(q('.btn-cancel'), st.modal.cancel);
+      if (q('.btn-submit')) setOwnText(q('.btn-submit'), st.modal.submit);
+    }
+    d.querySelectorAll('script').forEach(s => {
+      let c = s.textContent;
+      if (st.modal.hasKeyword) c = c.replace(/(toUpperCase\(\)\s*===\s*')((?:[^'\\]|\\.)*)(')/, (m, a, b, e) => a + jsStr(st.modal.keyword.toUpperCase()) + e);
+      if (st.modal.hasRedirect) c = c.replace(/(window\.location\.href\s*=\s*')((?:[^'\\]|\\.)*)(')/, (m, a, b, e) => a + jsStr(st.modal.redirect) + e);
+      if (c !== s.textContent) s.textContent = c;
+    });
+
+    // stats
+    const sc = q('.stats');
+    if (sc) fillList(d, sc, st.stats.map(s => mk(d, 'div', { class: 'stat' }, [leaf(d, 'span', { class: 'stat-num' }, s.num), leaf(d, 'span', { class: 'stat-label' }, s.label)])), '  ', '');
+
+    // about
+    const co = q('#co-to');
+    if (co) {
+      head(co, st.about);
+      sH(co.querySelector(':scope > p'), st.about.text);
+      const g = co.querySelector('.info-grid');
+      if (g) fillList(d, g, st.about.cards.map(c => blk(d, 'div', { class: 'info-card' }, [
+        leaf(d, 'div', { class: 'info-icon' }, c.icon), leaf(d, 'h3', {}, c.title), leaf(d, 'p', {}, c.desc, true)
+      ], '    ')), '    ', '  ');
+    }
+
+    // features
+    const fe = q('#zawartosc');
+    if (fe) {
+      head(fe, st.features);
+      const g = fe.querySelector('.features-grid');
+      if (g) fillList(d, g, st.features.items.map(i => mk(d, 'div', { class: 'feature-item' }, [mk(d, 'div', { class: 'feature-dot' }), leaf(d, 'span', {}, i.text)])), '    ', '  ');
+    }
+
+    // steps
+    const se = q('#jak-uzywac');
+    if (se) {
+      head(se, st.steps);
+      const g = se.querySelector('.steps');
+      if (g) fillList(d, g, st.steps.items.map((s, i) => blk(d, 'div', { class: 'step' }, [
+        leaf(d, 'div', { class: 'step-num' }, String(i + 1).padStart(2, '0')),
+        blk(d, 'div', { class: 'step-content' }, [leaf(d, 'h4', {}, s.title), leaf(d, 'p', {}, s.desc, true)], '      ')
+      ], '    ')), '    ', '  ');
+    }
+
+    // team
+    const tw = q('#tworcy');
+    if (tw) {
+      head(tw, st.team);
+      const g = tw.querySelector('.team-container');
+      if (g) fillList(d, g, st.team.people.map(p => {
+        const info = [leaf(d, 'div', { class: 'person-role' }, p.role), leaf(d, 'div', { class: 'person-name' }, p.name), leaf(d, 'p', { class: 'person-desc' }, p.desc, true)];
+        if (p.meta && p.meta.trim()) info.push(leaf(d, 'span', { class: 'person-meta' }, p.meta));
+        return blk(d, 'div', { class: 'person-box' }, [
+          mk(d, 'div', { class: 'person-avatar' }, [mk(d, 'img', { src: p.img, alt: p.name })]),
+          blk(d, 'div', {}, info, '      ')
+        ], '    ');
+      }), '    ', '  ');
+    }
+
+    // support / discord CTA
+    const dc = q('.discord-cta');
+    if (dc) {
+      head(dc, st.support);
+      sH(dc.querySelector(':scope > p'), st.support.text);
+      const a = dc.querySelector('a.btn-discord');
+      if (a) { setOwnText(a, st.support.label); a.setAttribute('href', st.support.href); }
+    }
+
+    // footer
+    const ft = q('footer');
+    if (ft) {
+      const fd = ft.querySelector(':scope > div');
+      if (fd) {
+        fd.textContent = '';
+        st.footer.links.forEach((l, i) => {
+          fd.appendChild(d.createTextNode(i ? ' · \n    ' : '\n    '));
+          fd.appendChild(mk(d, 'a', { href: l.href, target: l.blank ? '_blank' : null, style: l.hl ? 'color: var(--cyan);' : null }, [l.label]));
+        });
+        fd.appendChild(d.createTextNode('\n  '));
+      }
+      sT(ft.querySelector('p'), st.footer.text);
+    }
+  }
+
+  const serialize = d => '<!DOCTYPE html>\n' + d.documentElement.outerHTML
+    .replace(/^(<html[^>]*>)<head>/, '$1\n<head>')
+    .replace(/\s*<\/body><\/html>$/, '\n\n</body>\n</html>') + '\n';
+  function build() { const d = parseDoc(baseHtml); applyState(d, state); return serialize(d); }
+
+  function siteUrl() {
+    return /\.github\.io$/i.test(cfg.repo) ? `https://${cfg.repo.toLowerCase()}/` : `https://${cfg.owner.toLowerCase()}.github.io/${cfg.repo}/`;
+  }
+  // Mark every simple text element with the state path it edits
+  function tagEditable(d) {
+    const q = s => d.querySelector(s);
+    const qa = (s, r = d) => [...r.querySelectorAll(s)];
+    const T = (el, path, html) => { if (el) { el.setAttribute('data-bc', path); if (html) el.setAttribute('data-bc-html', ''); } };
+    const sec = (root, key) => { if (!root) return; T(root.querySelector('.section-tag'), key + '.tag'); T(root.querySelector('h2'), key + '.title'); };
+
+    T(q('.hero-badge'), 'hero.badge');
+    T(q('.hero-version'), 'hero.version');
+    T(q('.hero-sub'), 'hero.sub');
+    qa('.nav-links a').forEach((a, i) => T(a, `nav.${i}.label`));
+    qa('.stats .stat').forEach((s, i) => { T(s.querySelector('.stat-num'), `stats.${i}.num`); T(s.querySelector('.stat-label'), `stats.${i}.label`); });
+
+    const co = q('#co-to');
+    if (co) {
+      sec(co, 'about'); T(co.querySelector(':scope > p'), 'about.text', true);
+      qa('.info-card', co).forEach((c, i) => { T(c.querySelector('.info-icon'), `about.cards.${i}.icon`); T(c.querySelector('h3'), `about.cards.${i}.title`); T(c.querySelector('p'), `about.cards.${i}.desc`, true); });
+    }
+    const fe = q('#zawartosc');
+    if (fe) { sec(fe, 'features'); qa('.feature-item span', fe).forEach((x, i) => T(x, `features.items.${i}.text`)); }
+    const se = q('#jak-uzywac');
+    if (se) { sec(se, 'steps'); qa('.step', se).forEach((x, i) => { T(x.querySelector('h4'), `steps.items.${i}.title`); T(x.querySelector('.step-content p'), `steps.items.${i}.desc`, true); }); }
+    const tw = q('#tworcy');
+    if (tw) {
+      sec(tw, 'team');
+      qa('.person-box', tw).forEach((b, i) => {
+        T(b.querySelector('.person-role'), `team.people.${i}.role`); T(b.querySelector('.person-name'), `team.people.${i}.name`);
+        T(b.querySelector('.person-desc'), `team.people.${i}.desc`, true); T(b.querySelector('.person-meta'), `team.people.${i}.meta`);
+      });
+    }
+    const dc = q('.discord-cta');
+    if (dc) { sec(dc, 'support'); T(dc.querySelector(':scope > p'), 'support.text', true); }
+    T(q('footer p'), 'footer.text');
+  }
+
+  const EDITOR_CSS =
+    '.bc-edit{outline:1px dashed rgba(0,212,255,.4);outline-offset:4px;cursor:text;transition:outline-color .15s,background .15s}' +
+    '.bc-edit:hover{outline-color:#00d4ff;background:rgba(0,212,255,.08)}' +
+    '.bc-edit:focus{outline:2px solid #00d4ff;background:rgba(0,212,255,.1)}';
+
+  const EDITOR_JS =
+    "document.addEventListener('click',function(e){var a=e.target.closest('a');if(!a)return;var h=a.getAttribute('href')||'';" +
+    "if(h.charAt(0)==='#'){e.preventDefault();var t=document.querySelector(h);if(t)t.scrollIntoView({behavior:'smooth'});}" +
+    "else if(a.target!=='_blank'){e.preventDefault();}else{e.preventDefault();}});" +
+    "document.querySelectorAll('[data-bc]').forEach(function(el){" +
+    "var rich=el.hasAttribute('data-bc-html');" +
+    "el.setAttribute('contenteditable','true');el.setAttribute('spellcheck','false');el.classList.add('bc-edit');" +
+    "el.addEventListener('input',function(){parent.postMessage({bc:1,path:el.getAttribute('data-bc'),value:rich?el.innerHTML:el.textContent},'*');});" +
+    "el.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();if(rich)document.execCommand('insertLineBreak');else el.blur();}});" +
+    "el.addEventListener('paste',function(e){e.preventDefault();var t=(e.clipboardData||window.clipboardData).getData('text/plain');document.execCommand('insertText',false,t);});" +
+    "});";
+
+  function previewHtml() {
+    const d = parseDoc(baseHtml);
+    applyState(d, state);
+    tagEditable(d);
+    d.head.insertBefore(mk(d, 'base', { href: siteUrl() }), d.head.firstChild);
+    d.head.appendChild(mk(d, 'style', {}, [EDITOR_CSS]));
+    d.body.appendChild(mk(d, 'script', {}, [EDITOR_JS]));
+    return serialize(d);
+  }
+
+  /* ==========================================================
+   * Diff
+   * ========================================================== */
+  function diffLines(a, b) {
+    const A = a.split('\n'), B = b.split('\n');
+    let s = 0;
+    while (s < A.length && s < B.length && A[s] === B[s]) s++;
+    let ea = A.length, eb = B.length;
+    while (ea > s && eb > s && A[ea - 1] === B[eb - 1]) { ea--; eb--; }
+    const a2 = A.slice(s, ea), b2 = B.slice(s, eb);
+    const n = a2.length, m = b2.length;
+    const out = [];
+    for (let i = Math.max(0, s - 2); i < s; i++) out.push({ t: ' ', x: A[i] });
+    if (n * m > 6e6) {
+      a2.forEach(x => out.push({ t: '-', x }));
+      b2.forEach(x => out.push({ t: '+', x }));
+    } else {
+      const w = m + 1, dp = new Uint16Array((n + 1) * w);
+      for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--)
+        dp[i * w + j] = a2[i] === b2[j] ? dp[(i + 1) * w + j + 1] + 1 : Math.max(dp[(i + 1) * w + j], dp[i * w + j + 1]);
+      let i = 0, j = 0;
+      while (i < n && j < m) {
+        if (a2[i] === b2[j]) { out.push({ t: ' ', x: a2[i] }); i++; j++; }
+        else if (dp[(i + 1) * w + j] >= dp[i * w + j + 1]) out.push({ t: '-', x: a2[i++] });
+        else out.push({ t: '+', x: b2[j++] });
+      }
+      while (i < n) out.push({ t: '-', x: a2[i++] });
+      while (j < m) out.push({ t: '+', x: b2[j++] });
+    }
+    for (let i = ea; i < Math.min(A.length, ea + 2); i++) out.push({ t: ' ', x: A[i] });
+    return out;
+  }
+  function renderDiff(lines) {
+    const keep = new Array(lines.length).fill(false);
+    lines.forEach((l, i) => { if (l.t !== ' ') for (let k = i - 2; k <= i + 2; k++) if (k >= 0 && k < lines.length) keep[k] = true; });
+    let html = '', gap = false;
+    lines.forEach((l, i) => {
+      if (!keep[i]) { if (!gap) { html += '<div class="dl gap">⋯</div>'; gap = true; } return; }
+      gap = false;
+      html += `<div class="dl ${l.t === '+' ? 'add' : l.t === '-' ? 'del' : ''}"><b>${l.t === ' ' ? '' : l.t}</b><span>${esc(l.x) || ' '}</span></div>`;
+    });
+    return html;
+  }
+
+  /* ==========================================================
+   * UI building blocks
+   * ========================================================== */
+  const fld = (label, path, o = {}) => {
+    const v = getP(state, path);
+    const id = 'f_' + path.replace(/\./g, '_');
+    const hint = o.hint ? `<small>${o.hint}</small>` : '';
+    if (o.type === 'check') return `<label class="check"><input type="checkbox" data-path="${path}" ${v ? 'checked' : ''}><span>${label}</span></label>`;
+    if (o.type === 'area') return `<div class="field ${o.cls || ''}"><label for="${id}">${label}</label><textarea id="${id}" rows="${o.rows || 3}" data-path="${path}" spellcheck="false">${esc(v)}</textarea>${hint}</div>`;
+    return `<div class="field ${o.cls || ''}"><label for="${id}">${label}</label><input id="${id}" type="text" data-path="${path}" value="${esc(v)}" ${o.ph ? `placeholder="${esc(o.ph)}"` : ''} autocomplete="off">${hint}</div>`;
+  };
+
+  const pageHead = (t, p) => `<div class="page-head"><h2>${t}</h2><p>${p}</p></div>`;
+
+  function listUI(path, titleFn, bodyFn, addLabel, compact) {
+    const arr = getP(state, path) || [];
+    const items = arr.map((it, i) => `
+      <div class="item ${compact ? 'compact' : ''}">
+        <div class="item-head">
+          <span class="item-title"><i>${String(i + 1).padStart(2, '0')}</i>${esc(titleFn(it, i))}</span>
+          <div class="item-actions">
+            <button class="icon-btn" data-act="up" data-list="${path}" data-i="${i}" title="Move up" aria-label="Move up" ${i === 0 ? 'disabled' : ''}>↑</button>
+            <button class="icon-btn" data-act="down" data-list="${path}" data-i="${i}" title="Move down" aria-label="Move down" ${i === arr.length - 1 ? 'disabled' : ''}>↓</button>
+            <button class="icon-btn danger" data-act="del" data-list="${path}" data-i="${i}" title="Delete" aria-label="Delete">✕</button>
+          </div>
+        </div>
+        <div class="item-body">${bodyFn(it, i)}</div>
+      </div>`).join('');
+    return items + `<button class="btn btn-ghost" data-act="add" data-list="${path}">+ ${addLabel}</button>`;
+  }
+
+  const NEW = {
+    'nav': { label: 'New link', href: '#', blank: false },
+    'stats': { num: '00', label: 'Label' },
+    'about.cards': { icon: '✨', title: 'New card', desc: 'Describe it here.' },
+    'features.items': { text: 'New feature' },
+    'steps.items': { title: 'New step', desc: 'Describe this step.' },
+    'team.people': { img: '', role: 'Role', name: 'Name', desc: 'A short bio.', meta: '' },
+    'footer.links': { label: 'Link', href: '#', blank: false, hl: false }
+  };
+
+  const secHead = (key, note) => `<div class="panel"><h3>Section heading</h3><div class="grid2">${fld('Small label above the title', key + '.tag')}${fld('Title', key + '.title')}</div>${note || ''}</div>`;
+
+  /* ==========================================================
+   * Views
+   * ========================================================== */
+  const SECTIONS = [
+    ['Edit', [['preview', 'Visual editor']]],
+    ['Content', [['hero', 'Hero'], ['beta', 'Beta modal'], ['stats', 'Stats bar'], ['about', 'About'], ['features', 'Features'], ['steps', 'How to use'], ['team', 'Team'], ['support', 'Support']]],
+    ['Site', [['general', 'General & nav'], ['footer', 'Footer']]],
+    ['Tools', [['raw', 'Raw HTML']]]
+  ];
+
+  const views = {
+    general() {
+      return pageHead('General & navigation', 'Page title, brand name and the links in the top bar.') + `
+      <div class="panel"><h3>Brand</h3>
+        <div class="grid2">${fld('Page title (browser tab)', 'title')}${fld('Brand name, first part', 'brandA')}${fld('Brand name, highlighted part', 'brandB')}</div>
+        <small class="note">The brand appears in the top bar and as the hero headline.</small>
+      </div>
+      <div class="panel"><h3>Navigation links</h3>
+        ${listUI('nav', n => n.label || 'Link', (n, i) => `<div class="grid2">${fld('Label', `nav.${i}.label`)}${fld('Link', `nav.${i}.href`)}</div>${fld('Open in a new tab', `nav.${i}.blank`, { type: 'check' })}`, 'Add link', true)}
+        <small class="note">Section anchors on the site: <code>#co-to</code> <code>#zawartosc</code> <code>#jak-uzywac</code> <code>#tworcy</code></small>
+      </div>`;
+    },
+
+    hero() {
+      const hb = (key, title, withHref) => {
+        const b = state.hero[key];
+        if (!b.found) return '';
+        return `<div class="panel"><div class="panel-head"><h3>${title}</h3>${fld('Visible', `hero.${key}.show`, { type: 'check' })}</div>
+          <div class="grid2">${fld('Button label', `hero.${key}.label`)}${withHref ? fld('Link', `hero.${key}.href`) : ''}</div></div>`;
+      };
+      return pageHead('Hero', 'The first thing visitors see: badge, version, tagline and the main buttons.') + `
+      <div class="panel"><h3>Text</h3><div class="stack">
+        ${fld('Badge', 'hero.badge')}
+        ${fld('Version line', 'hero.version', { hint: 'Shown under the headline, e.g. <code>WERSJA 2.1</code>.' })}
+        ${fld('Tagline', 'hero.sub', { type: 'area', rows: 3 })}
+      </div></div>
+      ${hb('download', 'Download button', true)}
+      ${hb('beta', 'Beta button', false)}
+      ${hb('github', 'GitHub button', true)}
+      ${hb('discord', 'Discord button', true)}
+      <small class="note">Hidden buttons stay in the page source, so you can bring them back later.</small>`;
+    },
+
+    beta() {
+      const m = state.modal;
+      if (!m.found) return pageHead('Beta modal', 'The warning shown before opening the beta.') + '<div class="panel"><p class="note">No beta modal was found in this file.</p></div>';
+      return pageHead('Beta modal', 'The confirmation dialog shown before visitors open the beta build.') + `
+      <div class="panel"><h3>Dialog text</h3><div class="stack">
+        ${fld('Title', 'modal.title')}
+        ${fld('Message (HTML allowed)', 'modal.text', { type: 'area', rows: 4, hint: 'Wrap words in <code>&lt;span&gt;…&lt;/span&gt;</code> to highlight them in cyan.' })}
+        <div class="grid2">${fld('Input placeholder', 'modal.placeholder')}${fld('Cancel button', 'modal.cancel')}${fld('Confirm button', 'modal.submit')}</div>
+      </div></div>
+      <div class="panel"><h3>Behaviour</h3>
+        <div class="grid2">
+          ${m.hasKeyword ? fld('Keyword visitors must type', 'modal.keyword', { hint: 'Saved in uppercase. Update the message above if you change it.' }) : ''}
+          ${m.hasRedirect ? fld('Redirect after confirming', 'modal.redirect', { hint: 'For example <code>./beta.html</code> or a full URL.' }) : ''}
+        </div>
+        ${(!m.hasKeyword || !m.hasRedirect) ? '<small class="note">Part of the modal script was not recognised, so those settings are hidden. Use Raw HTML to edit them.</small>' : ''}
+      </div>`;
+    },
+
+    stats() {
+      return pageHead('Stats bar', 'The highlights strip below the hero.') + `<div class="panel">
+        ${listUI('stats', s => s.num, (s, i) => `<div class="grid2">${fld('Big text', `stats.${i}.num`)}${fld('Caption', `stats.${i}.label`)}</div>`, 'Add stat', true)}</div>`;
+    },
+
+    about() {
+      return pageHead('About', 'The “what is it” section and its cards.') + secHead('about') + `
+      <div class="panel"><h3>Intro text</h3>${fld('Paragraph (HTML allowed)', 'about.text', { type: 'area', rows: 3 })}</div>
+      <div class="panel"><h3>Cards</h3>
+        ${listUI('about.cards', c => c.title, (c, i) => `<div class="grid2">${fld('Icon (emoji)', `about.cards.${i}.icon`)}${fld('Title', `about.cards.${i}.title`)}</div>${fld('Description (HTML allowed)', `about.cards.${i}.desc`, { type: 'area', rows: 3 })}`, 'Add card')}
+      </div>`;
+    },
+
+    features() {
+      return pageHead('Features', 'The grid of short benefit lines.') + secHead('features') + `<div class="panel"><h3>Items</h3>
+        ${listUI('features.items', f => f.text, (f, i) => fld('Text', `features.items.${i}.text`), 'Add feature', true)}</div>`;
+    },
+
+    steps() {
+      return pageHead('How to use', 'Numbered instructions. Numbers follow the order below.') + secHead('steps') + `<div class="panel"><h3>Steps</h3>
+        ${listUI('steps.items', s => s.title, (s, i) => `${fld('Title', `steps.items.${i}.title`)}${fld('Description (HTML allowed)', `steps.items.${i}.desc`, { type: 'area', rows: 3, hint: 'Use <code>&lt;code&gt;file.exe&lt;/code&gt;</code> for the cyan file-name style.' })}`, 'Add step')}</div>`;
+    },
+
+    team() {
+      return pageHead('Team', 'People behind the project.') + secHead('team') + `<div class="panel"><h3>Members</h3>
+        ${listUI('team.people', p => p.name, (p, i) => `
+          <div class="grid2">${fld('Name', `team.people.${i}.name`)}${fld('Role', `team.people.${i}.role`)}</div>
+          ${fld('Photo URL', `team.people.${i}.img`, { ph: 'https://…', hint: 'Any public image link, or a file path in your repository such as <code>./img/vxn.jpg</code>.' })}
+          ${fld('Bio (HTML allowed)', `team.people.${i}.desc`, { type: 'area', rows: 4 })}
+          ${fld('Extra line (optional)', `team.people.${i}.meta`, { hint: 'Shown as a small monospace tag under the bio. Leave empty to hide it.' })}`, 'Add member')}</div>`;
+    },
+
+    support() {
+      return pageHead('Support', 'The call-to-action above the footer.') + secHead('support') + `
+      <div class="panel"><h3>Content</h3><div class="stack">
+        ${fld('Text (HTML allowed)', 'support.text', { type: 'area', rows: 3 })}
+        <div class="grid2">${fld('Button label', 'support.label')}${fld('Button link', 'support.href')}</div>
+      </div></div>`;
+    },
+
+    footer() {
+      return pageHead('Footer', 'Links and copyright line at the bottom.') + `
+      <div class="panel"><h3>Links</h3>
+        ${listUI('footer.links', l => l.label, (l, i) => `<div class="grid2">${fld('Label', `footer.links.${i}.label`)}${fld('Link', `footer.links.${i}.href`)}</div>
+          <div class="row" style="margin-top:0">${fld('Open in a new tab', `footer.links.${i}.blank`, { type: 'check' })}${fld('Highlight in cyan', `footer.links.${i}.hl`, { type: 'check' })}</div>`, 'Add link')}
+      </div>
+      <div class="panel"><h3>Bottom line</h3>${fld('Text', 'footer.text')}</div>`;
+    },
+
+    preview() {
+      return pageHead('Visual editor', 'Click any text with a dashed outline and type. Changes are kept as you go, then use Review &amp; commit to publish.') + `
+      <div class="toolbar">
+        <div class="seg"><button class="on" data-dev="desktop">Desktop</button><button data-dev="mobile">Mobile</button></div>
+        <button class="btn btn-ghost btn-sm" data-act="refresh-preview">Reload view</button>
+      </div>
+      <small class="note" style="margin:0 0 1rem">Buttons, links, images and adding or removing items are edited in the Content tabs on the left.</small>
+      <div class="preview-wrap" id="pvWrap"><iframe id="pv" title="Site preview" sandbox="allow-scripts allow-popups"></iframe></div>`;
+    },
+
+    raw() {
+      return pageHead('Raw HTML', 'The full file as it will be committed. Edit anything, then apply it back to the form editor.') + `
+      <div class="panel">
+        <textarea id="rawTa" class="raw" spellcheck="false"></textarea>
+        <div class="row">
+          <button class="btn btn-primary btn-sm" data-act="apply-raw">Apply to editor</button>
+          <button class="btn btn-plain btn-sm" data-act="reset-raw">Reset to current form output</button>
+        </div>
+        <small class="note">“Apply” re-reads the form fields from this code. Nothing is sent to GitHub until you use Review &amp; commit.</small>
+      </div>`;
+    }
+  };
+
+  /* ==========================================================
+   * Rendering & navigation
+   * ========================================================== */
+  function renderSide() {
+    $('#side').innerHTML = SECTIONS.map(([g, items]) => `<h6>${g}</h6>` + items.map(([id, label]) => `<button data-go="${id}" class="${id === cur ? 'on' : ''}">${label}</button>`).join('')).join('');
+  }
+
+  function render() {
+    if (!state) return;
+    $('#main').innerHTML = views[cur]();
+    if (cur === 'preview') loadPreview();
+    if (cur === 'raw') $('#rawTa').value = build();
+  }
+
+  function go(id) {
+    cur = id;
+    renderSide();
+    render();
+    window.scrollTo({ top: 0 });
+  }
+
+  function loadPreview() { const f = $('#pv'); if (f) f.srcdoc = previewHtml(); }
+
+  let dt;
+  function scheduleStatus() { clearTimeout(dt); dt = setTimeout(refreshStatus, 200); }
+  function refreshStatus() {
+    if (!state) return;
+    try { dirty = build() !== baseline; } catch (e) { dirty = true; }
+    const p = $('#statusPill');
+    p.textContent = dirty ? 'Unsaved changes' : 'No changes';
+    p.classList.toggle('dirty', dirty);
+    $('#commitBtn').disabled = !dirty;
+  }
+
+  let tt;
+  function toast(msg, type, link) {
+    const t = $('#toast');
+    t.className = 'toast show ' + (type || '');
+    t.innerHTML = `<span>${esc(msg)}</span>` + (link ? ` <a href="${esc(link)}" target="_blank" rel="noopener">View commit</a>` : '');
+    clearTimeout(tt);
+    tt = setTimeout(() => t.classList.remove('show'), 6500);
+  }
+
+  /* ==========================================================
+   * Events
+   * ========================================================== */
+  document.addEventListener('input', e => {
+    const t = e.target;
+    const p = t.dataset && t.dataset.path;
+    if (!p || !state) return;
+    setP(state, p, t.type === 'checkbox' ? t.checked : t.value);
+    scheduleStatus();
+  });
+
+  window.addEventListener('message', e => {
+    const f = $('#pv');
+    const m = e.data;
+    if (!f || e.source !== f.contentWindow || !m || !m.bc || !state) return;
+    try { if (typeof getP(state, m.path) !== 'string') return; setP(state, m.path, String(m.value)); } catch (err) { return; }
+    scheduleStatus();
+  });
+
+  document.addEventListener('click', e => {
+    const go_ = e.target.closest('[data-go]');
+    if (go_) { go(go_.dataset.go); return; }
+
+    const dev = e.target.closest('[data-dev]');
+    if (dev) {
+      $$('.seg button').forEach(b => b.classList.toggle('on', b === dev));
+      $('#pvWrap').classList.toggle('mobile', dev.dataset.dev === 'mobile');
+      return;
+    }
+
+    const b = e.target.closest('[data-act]');
+    if (!b) return;
+    const act = b.dataset.act;
+
+    if (act === 'refresh-preview') { loadPreview(); return; }
+
+    if (act === 'apply-raw') {
+      baseHtml = $('#rawTa').value;
+      state = parseState(baseHtml);
+      refreshStatus();
+      toast('Raw HTML applied to the editor.', 'ok');
+      return;
+    }
+    if (act === 'reset-raw') { $('#rawTa').value = build(); return; }
+
+    const list = b.dataset.list, i = +b.dataset.i;
+    const arr = getP(state, list);
+    if (!arr) return;
+    if (act === 'add') arr.push(clone(NEW[list]));
+    else if (act === 'del') arr.splice(i, 1);
+    else if (act === 'up' && i > 0) [arr[i - 1], arr[i]] = [arr[i], arr[i - 1]];
+    else if (act === 'down' && i < arr.length - 1) [arr[i + 1], arr[i]] = [arr[i], arr[i + 1]];
+    const y = window.scrollY;
+    render();
+    window.scrollTo({ top: y });
+    scheduleStatus();
+  });
+
+  window.addEventListener('beforeunload', e => { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
+
+  /* ---------- Login / session ---------- */
+  function showLoginError(msg) { const el = $('#loginErr'); el.textContent = msg; el.classList.toggle('hidden', !msg); }
+
+  async function connect() {
+    showLoginError('');
+    cfg = {
+      owner: $('#cOwner').value.trim(),
+      repo: $('#cRepo').value.trim(),
+      branch: $('#cBranch').value.trim() || 'main',
+      path: $('#cPath').value.trim().replace(/^\/+/, '') || 'index.html'
+    };
+    const tk = $('#cToken').value.trim();
+    if (!tk) { showLoginError('Paste your GitHub token first.'); return; }
+    if (!cfg.owner || !cfg.repo) { $('#cSettings').open = true; showLoginError('Owner and repository are required.'); return; }
+
+    const btn = $('#connectBtn');
+    btn.disabled = true; btn.textContent = 'Connecting…';
+    token = tk;
+    try {
+      user = await gh('GET', '/user');
+      let info;
+      try { info = await gh('GET', `/repos/${cfg.owner}/${cfg.repo}`); }
+      catch (e) { if (e.status === 404) { $('#cSettings').open = true; throw new Error(`Repository ${cfg.owner}/${cfg.repo} was not found, or the token cannot see it. For a site at boostcore-web.github.io the repository is normally named boostcore-web.github.io.`); } throw e; }
+      if (info.permissions && info.permissions.push === false) throw new Error('This token can read the repository but not write to it. Give it Contents: Read and write.');
+      await loadFile();
+
+      store.set(TOKEN_KEY, token, $('#cRemember').checked);
+      try { localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); } catch (e) {}
+      enter();
+    } catch (e) {
+      token = '';
+      if (e.status === 404 && /contents/i.test(e.message || '') === false && !$('#cSettings').open) $('#cSettings').open = true;
+      showLoginError(explain(e));
+    } finally {
+      btn.disabled = false; btn.textContent = 'Connect';
+    }
+  }
+
+  function enter() {
+    $('#login').classList.add('hidden');
+    $('#app').classList.remove('hidden');
+    $('#repoChip').textContent = `${cfg.owner}/${cfg.repo} @ ${cfg.branch}`;
+    $('#userChip').textContent = '@' + (user && user.login || '');
+    $('#siteLink').href = siteUrl();
+    if (!state.valid) toast('This file does not look like the BoostCore index.html. Use Raw HTML if something is missing.', 'error');
+    go(cur);
+    refreshStatus();
+  }
+
+  function logout() {
+    if (dirty && !confirm('You have unsaved changes. Sign out anyway?')) return;
+    dirty = false; state = null; token = ''; store.del(TOKEN_KEY);
+    $('#cToken').value = '';
+    $('#app').classList.add('hidden');
+    $('#login').classList.remove('hidden');
+  }
+
+  async function discard() {
+    if (dirty && !confirm('Discard all unsaved changes and reload the file from GitHub?')) return;
+    try { await loadFile(); render(); refreshStatus(); toast('Reloaded from GitHub.', 'ok'); }
+    catch (e) { toast(explain(e), 'error'); }
+  }
+
+  /* ---------- Commit ---------- */
+  function openCommit() {
+    const built = build();
+    const lines = diffLines(remoteHtml, built);
+    const add = lines.filter(l => l.t === '+').length, del = lines.filter(l => l.t === '-').length;
+    $('#diffSum').innerHTML = add || del ? `<b class="a">+${add}</b> added, <b class="d">−${del}</b> removed in <code>${esc(cfg.path)}</code> on <code>${esc(cfg.branch)}</code>. The first commit may also include small formatting normalisations.` : 'No differences from the version on GitHub.';
+    $('#diffBox').innerHTML = renderDiff(lines);
+    $('#commitErr').classList.add('hidden');
+    $('#commitGo').disabled = !(add || del);
+    $('#commitModal').classList.add('active');
+    setTimeout(() => $('#commitMsg').focus(), 80);
+  }
+  const closeCommit = () => $('#commitModal').classList.remove('active');
+
+  async function commit() {
+    const btn = $('#commitGo');
+    const msg = $('#commitMsg').value.trim() || 'Update site content via BoostCore Admin';
+    const content = build();
+    btn.disabled = true; btn.textContent = 'Committing…';
+    $('#commitErr').classList.add('hidden');
+    try {
+      const res = await gh('PUT', `/repos/${cfg.owner}/${cfg.repo}/contents/${encPath()}`, {
+        message: msg, content: utf8ToB64(content), sha, branch: cfg.branch
+      });
+      sha = res.content.sha;
+      remoteHtml = content; baseHtml = content;
+      state = parseState(content);
+      baseline = build();
+      closeCommit();
+      render(); refreshStatus();
+      toast('Committed. GitHub Pages will redeploy shortly.', 'ok', res.commit && res.commit.html_url);
+    } catch (e) {
+      const el = $('#commitErr'); el.textContent = explain(e); el.classList.remove('hidden');
+    } finally {
+      btn.disabled = false; btn.textContent = 'Commit to GitHub';
+    }
+  }
+
+  $('#connectBtn').addEventListener('click', connect);
+  $('#cToken').addEventListener('keydown', e => { if (e.key === 'Enter') connect(); });
+  $('#logoutBtn').addEventListener('click', logout);
+  $('#discardBtn').addEventListener('click', discard);
+  $('#commitBtn').addEventListener('click', openCommit);
+  $('#commitCancel').addEventListener('click', closeCommit);
+  $('#commitGo').addEventListener('click', commit);
+  $('#commitModal').addEventListener('click', e => { if (e.target.id === 'commitModal') closeCommit(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCommit(); });
+
+  /* ---------- Boot ---------- */
+  (function boot() {
+    try { const saved = JSON.parse(localStorage.getItem(CFG_KEY) || 'null'); if (saved) cfg = Object.assign(cfg, saved); } catch (e) {}
+    $('#cOwner').value = cfg.owner; $('#cRepo').value = cfg.repo; $('#cBranch').value = cfg.branch; $('#cPath').value = cfg.path;
+    const t = store.get(TOKEN_KEY);
+    if (t) {
+      $('#cToken').value = t;
+      try { $('#cRemember').checked = !!localStorage.getItem(TOKEN_KEY); } catch (e) {}
+      connect();
+    }
+  })();
+})();
+</script>
+</body>
+</html>
